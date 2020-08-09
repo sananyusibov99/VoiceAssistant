@@ -12,7 +12,7 @@ import webbrowser
 import os
 import winshell
 import pyjokes
-import feedparser
+import feedparser 
 import smtplib
 import ctypes
 import time
@@ -157,12 +157,12 @@ def turn():
             url = "stackoverflow.com"
             webbrowser.get('chrome').open(url)
 
-        elif 'the time' in query:
+        elif 'the time' or 'time' in query:
             now = datetime.datetime.now()
             strTime = now.strftime("%H:%M:%S")
             speak(f"Sir, the time is {strTime}", "Assistant")
 
-        elif 'date is it' in query:
+        elif 'date is it' or 'date' in query:
             now = datetime.datetime.now()
             strTime = now.strftime("%d %B, %Y")
             speak(f"Sir, the date is {strTime}", "Assistant")
@@ -345,6 +345,28 @@ def turn():
         elif 'fine' in query or "good" in query:
             speak("It's good to know that your fine", "Assistant")
 
+        elif 'convert' or 'open converter' in query:
+            answer = speak("What will you convert sir", "Assistant")
+            if answer == 'currency':
+                speak("Tell me first currency")
+                first_currency = takeCommand()
+
+                speak("Tell me second currency")
+                second_currency = takeCommand()
+
+                speak("Tell me count")
+                count = takeCommand()
+
+                url = f"https://currency26.p.rapidapi.com/convert/{first_currency}/{second_currency}/{count}"
+
+                headers = {
+                    'x-rapidapi-host': "currency26.p.rapidapi.com",
+                    'x-rapidapi-key': "afce3bc89fmsh1ca02613744b32ap11d006jsnda1143ee3262"
+                    }
+
+                response = requests.request("GET", url, headers=headers)
+
+                print(response.text)
 
 speak_image = PhotoImage(file="img/mic.png")
 button_speak = Button(command=turn, image=speak_image).pack()
