@@ -220,7 +220,7 @@ def turn():
                 i = 1
 
                 speak('here are some top news from the times of USA', "Assistant")
-                print('''=============== TIMES OF Azerbaijan ============''' + '\n')
+                print('''=============== TIMES OF USA ============''' + '\n')
 
                 for item in data['articles']:
                     print(str(i) + '. ' + item['title'] + '\n')
