@@ -383,16 +383,25 @@ def turn():
                 speak("Tell me count")
                 count = takeCommand()
 
-                url = f"https://currency26.p.rapidapi.com/convert/{first_currency}/{second_currency}/{count}"
+                try:
+                    url = "https://currency28.p.rapidapi.com/convert-currency"
 
-                headers = {
-                    'x-rapidapi-host': "currency26.p.rapidapi.com",
-                    'x-rapidapi-key': "afce3bc89fmsh1ca02613744b32ap11d006jsnda1143ee3262"
+                    querystring = {"amount": count, "to": first_currency, "from": second_currency}
+
+                    headers = {
+                        'x-rapidapi-host': "currency28.p.rapidapi.com",
+                        'x-rapidapi-key': "afce3bc89fmsh1ca02613744b32ap11d006jsnda1143ee3262"
                     }
 
-                response = requests.request("GET", url, headers=headers)
+                    response = requests.request("GET", url, headers=headers, params=querystring)
 
-                print(response.text)
+                    result = json.loads(response.text)
+                    print(result["result"]["value"])
+
+                except Exception as e:
+
+                    print(str(e))
+
 
 #speak_image = PhotoImage(file="img/mic.png")
 #button_speak = Button(command=turn, image=speak_image).pack()
