@@ -18,6 +18,7 @@ import ctypes
 import time
 import requests
 import shutil
+import wmi
 from twilio.rest import Client
 from clint.textui import progress
 from bs4 import BeautifulSoup
@@ -156,6 +157,30 @@ def turn():
             speak("Here you go to Stack Over flow.Happy coding", "Assistant")
             url = "stackoverflow.com"
             webbrowser.get('chrome').open(url)
+
+        #System
+        elif "increase brightness" in query:
+            c = wmi.WMI(namespace='wmi')
+            current = c.WmiMonitorBrightness()[0]
+            brightness = current.CurrentBrightness + 10
+            if brightness < 100:
+                methods = c.WmiMonitorBrightnessMethods()[0]
+                methods.WmiSetBrightness(brightness, 0)
+                speak(f"Brightness was increased, current brightness is {brightness}", "Assistant")
+            else:
+                speak("Brightness is maximum", "Assistant")
+
+        elif "decrease brightness" in query:
+            c = wmi.WMI(namespace='wmi')
+            current = c.WmiMonitorBrightness()[0]
+            brightness = current.CurrentBrightness - 10
+            if brightness > 5:
+                methods = c.WmiMonitorBrightnessMethods()[0]
+                methods.WmiSetBrightness(brightness, 0)
+                speak(f"Brightness was decreased, current brightness is {brightness}", "Assistant")
+            else:
+                speak("Brightness is minimum", "Assistant")
+
 
         elif 'the time' or 'time' in query:
             now = datetime.datetime.now()
@@ -326,11 +351,12 @@ def turn():
             url = "wikipedia.com"
             webbrowser.get('chrome').open(url)
 
+
+
+        # most asked question from google Assistant
         elif "good morning" in query:
             speak("A warm" + query, "Assistant")
             speak("How are you Mister", "Assistant")
-
-        # most asked question from google Assistant
         elif "will you be my girlfriend" in query or "will you be my boyfriend" in query:
             speak("I'm not sure about, may be you should give me some time", "Assistant")
         elif "how are you" in query:
@@ -368,8 +394,9 @@ def turn():
 
                 print(response.text)
 
-speak_image = PhotoImage(file="img/mic.png")
-button_speak = Button(command=turn, image=speak_image).pack()
+#speak_image = PhotoImage(file="img/mic.png")
+#button_speak = Button(command=turn, image=speak_image).pack()
+button_speak = Button(command=turn, text="Speak").pack()
 
 logText = Text(height=50, width=50)
 logText.bind("<Key>", lambda e: "break")
