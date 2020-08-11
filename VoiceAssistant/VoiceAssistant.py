@@ -19,6 +19,10 @@ import time
 import requests
 import shutil
 import wmi
+from ctypes import POINTER, cast
+from comtypes import CLSCTX_ALL
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+import math
 from twilio.rest import Client
 from clint.textui import progress
 from bs4 import BeautifulSoup
@@ -180,14 +184,55 @@ def turn():
                 speak(f"Brightness was decreased, current brightness is {brightness}", "Assistant")
             else:
                 speak("Brightness is minimum", "Assistant")
+        
+        elif "unmute" in query:
+            devices = AudioUtilities.GetSpeakers()
+            interface = devices.Activate(
+                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
+            volume = cast(interface, POINTER(IAudioEndpointVolume))
+            volume.SetMute(0, None);
+            speak("Volume is unmuted", "Assistant")
 
+        elif "mute" in query:
+            devices = AudioUtilities.GetSpeakers()
+            interface = devices.Activate(
+                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
+            volume = cast(interface, POINTER(IAudioEndpointVolume))
+            volume.SetMute(1, None);
+            speak("Volume is muted", "Assistant")
 
-        elif 'the time' or 'time' in query:
+        elif "increase volume" in query:
+            devices = AudioUtilities.GetSpeakers()
+            interface = devices.Activate(
+                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
+            volume = cast(interface, POINTER(IAudioEndpointVolume))
+            currentDb = volume.GetMasterVolumeLevel()
+            currentWin = 24.3738*math.pow((-(90.3712/(currentDb-25.0589))-1), 1.477575428748062)
+            needWin = currentWin + 10
+            needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
+            volume.SetMasterVolumeLevel(needDb, None)
+            needWin = math.trunc(needWin)
+            speak(f"Current volume is {needWin}", "Assistant")
+
+        elif "decrease volume" in query:
+            devices = AudioUtilities.GetSpeakers()
+            interface = devices.Activate(
+                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
+            volume = cast(interface, POINTER(IAudioEndpointVolume))
+            currentDb = volume.GetMasterVolumeLevel()
+            currentWin = 24.3738*math.pow((-(90.3712/(currentDb-25.0589))-1), 1.477575428748062)
+            needWin = currentWin - 10
+            needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
+            volume.SetMasterVolumeLevel(needDb, None)
+            needWin = math.trunc(needWin)
+            speak(f"Current volume is {needWin}", "Assistant")
+
+        elif 'the time' in query or 'time' in query:
             now = datetime.datetime.now()
             strTime = now.strftime("%H:%M:%S")
             speak(f"Sir, the time is {strTime}", "Assistant")
 
-        elif 'date is it' or 'date' in query:
+        elif 'date is it' in query or 'date' in query:
             now = datetime.datetime.now()
             strTime = now.strftime("%d %B, %Y")
             speak(f"Sir, the date is {strTime}", "Assistant")

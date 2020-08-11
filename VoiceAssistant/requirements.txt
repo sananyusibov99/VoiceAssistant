@@ -9,3 +9,5 @@ pip install twilio
 pip install feedparser
 pip install clint
 pip install PyAudio
+pip install wmi
+pip install pycaw
