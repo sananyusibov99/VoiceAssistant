@@ -381,12 +381,12 @@ def turn():
                 second_currency = takeCommand()
 
                 speak("Tell me count")
-                count = takeCommand()
+                value = takeCommand()
 
                 try:
                     url = "https://currency28.p.rapidapi.com/convert-currency"
 
-                    querystring = {"amount": count, "to": first_currency, "from": second_currency}
+                    querystring = {"amount": value, "to": first_currency, "from": second_currency}
 
                     headers = {
                         'x-rapidapi-host': "currency28.p.rapidapi.com",
@@ -395,13 +395,39 @@ def turn():
 
                     response = requests.request("GET", url, headers=headers, params=querystring)
 
-                    result = json.loads(response.text)
-                    print(result["result"]["value"])
+                    data = json.loads(response.text)
+                    print(data["result"]["value"])
 
+                except Exception as e:
+                    print(str(e))
+
+            elif answer == 'unit':
+                speak("Tell me first unit")
+                first_unit= takeCommand()
+
+                speak("Tell me second unit")
+                second_unit = takeCommand()
+
+                speak("Tell me count")
+                value = takeCommand()
+
+                
+                try:
+                    url = "https://community-neutrino-currency-conversion.p.rapidapi.com/convert"
+
+                    payload = f"from-type={first_unit}&to-type={second_unit}&from-value={value}"
+                    headers = {
+                        'x-rapidapi-host': "community-neutrino-currency-conversion.p.rapidapi.com",
+                        'x-rapidapi-key': "723e3a6c9cmshc33c3107695169dp1fecb9jsn35e893aa67d4",
+                        'content-type': "application/x-www-form-urlencoded"
+                    }
+
+                    response = requests.request("POST", url, data=payload, headers=headers)
+                    data = json.loads(response.text)
+                    print(data["result"])
                 except Exception as e:
 
                     print(str(e))
-
 
 #speak_image = PhotoImage(file="img/mic.png")
 #button_speak = Button(command=turn, image=speak_image).pack()
