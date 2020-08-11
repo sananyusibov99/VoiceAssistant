@@ -416,44 +416,48 @@ def turn():
         elif 'fine' in query or "good" in query:
             speak("It's good to know that your fine", "Assistant")
 
-        elif 'convert' or 'open converter' in query:
-            answer = speak("What will you convert sir", "Assistant")
+        elif 'convert' in query or 'open converter' in query:
+            speak("What will you convert sir", "Assistant")
+            answer = takeCommand()
+            addText(answer, "User")
             if answer == 'currency':
-                speak("Tell me first currency")
+                speak("Tell me first currency", "Assistant")
                 first_currency = takeCommand()
+                addText(first_currency, "User")
 
-                speak("Tell me second currency")
+                speak("Tell me second currency", "Assistant")
                 second_currency = takeCommand()
+                addText(second_currency, "User")
 
-                speak("Tell me count")
+                speak("Tell me count", "Assistant")
                 value = takeCommand()
-
+                addText(value, "User")
+                value = int(value)
+                
                 try:
                     url = "https://currency28.p.rapidapi.com/convert-currency"
-
-                    querystring = {"amount": value, "to": first_currency, "from": second_currency}
-
+                    querystring = {"amount": value, "to": second_currency, "from": first_currency}
                     headers = {
                         'x-rapidapi-host': "currency28.p.rapidapi.com",
                         'x-rapidapi-key': "afce3bc89fmsh1ca02613744b32ap11d006jsnda1143ee3262"
                     }
-
                     response = requests.request("GET", url, headers=headers, params=querystring)
 
                     data = json.loads(response.text)
-                    print(data["result"]["value"])
+                    answer = data["result"]["value"]
+                    speak(f"{value} {first_currency} is {answer} {second_currency}", "Assistant")
 
                 except Exception as e:
-                    print(str(e))
+                    speak(str(e), "Assistant")
 
             elif answer == 'unit':
-                speak("Tell me first unit")
+                speak("Tell me first unit", "Assistant")
                 first_unit= takeCommand()
 
-                speak("Tell me second unit")
+                speak("Tell me second unit", "Assistant")
                 second_unit = takeCommand()
 
-                speak("Tell me count")
+                speak("Tell me count", "Assistant")
                 value = takeCommand()
 
                 
@@ -485,9 +489,9 @@ logText.tag_configure("user", justify="right", foreground="red")
 logText.tag_configure("comp", justify="left", foreground="green")
 logText.pack()
 
-wishMe()
-usrname()
-speak("How can i Help you, Sir", "Assistant")
+#wishMe()
+#usrname()
+#speak("How can i Help you, Sir", "Assistant")
 
 
 root.mainloop()
