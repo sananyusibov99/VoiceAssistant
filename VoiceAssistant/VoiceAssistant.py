@@ -163,6 +163,19 @@ def turn():
             webbrowser.get('chrome').open(url)
 
         #System
+        elif "set brightness to" in query:
+            c = wmi.WMI(namespace='wmi')
+            words = query.split()
+            for word in words:
+                word = word.replace('%', '')
+                try:
+                    word = int(word)
+                    methods = c.WmiMonitorBrightnessMethods()[0]
+                    methods.WmiSetBrightness(word, 0)
+                    speak(f"Brightness was set to {word} percent", "Assistant")
+                except Exception as e:
+                    pass
+
         elif "increase brightness" in query:
             c = wmi.WMI(namespace='wmi')
             current = c.WmiMonitorBrightness()[0]
@@ -200,6 +213,22 @@ def turn():
             volume = cast(interface, POINTER(IAudioEndpointVolume))
             volume.SetMute(1, None);
             speak("Volume is muted", "Assistant")
+
+        elif "set volume to" in query:
+            devices = AudioUtilities.GetSpeakers()
+            interface = devices.Activate(
+                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
+            volume = cast(interface, POINTER(IAudioEndpointVolume))
+            words = query.split()
+            for word in words:
+                word = word.replace('%', '')
+                try:
+                    needWin = int(word)
+                    needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
+                    volume.SetMasterVolumeLevel(needDb, None)
+                    speak(f"Current volume was set to {needWin}", "Assistant")
+                except Exception as e:
+                    pass
 
         elif "increase volume" in query:
             devices = AudioUtilities.GetSpeakers()
