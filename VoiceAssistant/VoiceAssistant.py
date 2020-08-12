@@ -66,6 +66,11 @@ def speak(msg, side):
     engine.say(msg)
     engine.runAndWait()
 
+def resolveListOrDict(variable):
+  if isinstance(variable, list):
+    return variable[0]['plaintext']
+  else:
+    return variable['plaintext']
 
 def wishMe():
     global assname
@@ -350,8 +355,10 @@ def turn():
             time.sleep(a)
             print(a)
 
-        elif "where is" in query:
+        elif "show on map" in query or "where is" in query:
+            query = query.replace("show on map", "")
             query = query.replace("where is", "")
+
             location = query
             speak("User asked to Locate", "Assistant")
             speak(location, "Assistant")
@@ -425,6 +432,33 @@ def turn():
             url = "wikipedia.com"
             webbrowser.get('chrome').open(url)
 
+        elif "what" in query or "who" in query or "when" in query:
+          app_id = "AQ36PG-QEWLVH4YKE"
+          client = wolframalpha.Client(app_id)
+          res = client.query(query)
+
+            # Wolfram cannot resolve the question
+          if res['@success'] == 'false':
+             speak('Question cannot be resolved', "Assistant")
+          # Wolfram was able to resolve question
+          else:
+            result = ''
+            # pod[0] is the question
+            pod0 = res['pod'][0]
+            # pod[1] may contains the answer
+            pod1 = res['pod'][1]
+            # checking if pod1 has primary=true or title=result|definition
+            if (('definition' in pod1['@title'].lower()) or ('result' in  pod1['@title'].lower()) or (pod1.get('@primary','false') == 'true')):
+              # extracting result from pod1
+              result = resolveListOrDict(pod1['subpod'])
+              speak(result, "Assistant")
+            else:
+              # extracting wolfram question interpretation from pod0
+              question = resolveListOrDict(pod0['subpod'])
+              # removing unnecessary parenthesis
+              question = removeBrackets(question)
+              # searching for response from wikipedia
+              search_wiki(question)
 
 
         # most asked question from google Assistant
@@ -510,7 +544,7 @@ def turn():
                 print(str(e))
                 speak("Sorry, i can't do that", "Assistant")
                 
-        elif "search film" or "film" or "movie" in query:
+        elif "search film" in query or "film" in query or "movie" in query:
             speak("What movie, do you want to search ?", "Assistant")
             search = takeCommand()
             
