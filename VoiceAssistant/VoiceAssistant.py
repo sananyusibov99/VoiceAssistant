@@ -509,7 +509,29 @@ def turn():
             except Exception as e:
                 print(str(e))
                 speak("Sorry, i can't do that", "Assistant")
-                    
+                
+        elif "search film" or "film" or "movie" in query:
+            speak("What movie, do you want to search ?", "Assistant")
+            search = takeCommand()
+            
+            try:
+                url = f"https://imdb-internet-movie-database-unofficial.p.rapidapi.com/search/{search}"
+
+                headers = {
+                    'x-rapidapi-host': "imdb-internet-movie-database-unofficial.p.rapidapi.com",
+                    'x-rapidapi-key': "723e3a6c9cmshc33c3107695169dp1fecb9jsn35e893aa67d4"
+                }
+
+                response = requests.request("GET", url, headers=headers)
+                data = json.loads(response.text)
+
+                for i in range(len(data)):
+                    speak("There is movies, i founded", "Assistant")
+                    speak(data["titles"][i]["title"], "Assistant")
+
+            except Exception as e:
+                print(str(e))
+                speak("Sorry, i can't do that", "Assistant")
 
 #speak_image = PhotoImage(file="img/mic.png")
 #button_speak = Button(command=turn, image=speak_image).pack()
