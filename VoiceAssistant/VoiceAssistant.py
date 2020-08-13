@@ -9,6 +9,7 @@ import datetime
 import wikipedia
 import webbrowser
 import os
+import re
 import winshell
 import pyjokes
 import feedparser 
@@ -142,17 +143,16 @@ def turn():
 
         #clear()
 
-        query = "where am i"
-        #query = takeCommand().lower()
+        #query = "don't listen"
+        query = takeCommand().lower()
         addText(query, "User")
 
-        # Надо убрать [] в результатах ответов (транскрипцию, она звучит ужасно)
-        # Взять results и вырезать часть строки с []
         if 'wikipedia' in query:
             speak('Searching Wikipedia...', "Assistant")
             query = query.replace("wikipedia", "")
             results = wikipedia.summary(query, sentences=3)
             speak("According to Wikipedia", "Assistant")
+            results =  re.sub("[\[].*?[\]]", "", results)
             print(results)
             speak(results, "Assistant")
 
@@ -351,13 +351,44 @@ def turn():
             winshell.recycle_bin().empty(confirm=False, show_progress=False, sound=True)
             speak("Recycle Bin Recycled", "Assistant")
 
-        #Нужно переделать добавить возможность делать задержку на несколько минут (если в строке есть слово минута, то умножать время на 60)
         #Работать должно только в режиме безостановочной работы
         elif "don't listen" in query or "stop listening" in query:
-            speak("for how much time you want to stop jarvis from listening commands", "Assistant")
-            a = int(takeCommand())
-            time.sleep(a)
-            print(a)
+            speak("for how much time you want to stop me from listening commands", "Assistant")
+            a = takeCommand()     
+            if "seconds" in a:
+                a = a.split()
+                for word in a:
+                    try:
+                        number = int(word)
+                        print("test")
+                    except:
+                        pass     
+            elif "minutes" in a:
+                a = a.split()
+                for word in a:
+                    try:
+                        number = int(word)
+                        number = number * 60
+                    except:
+                        pass             
+            elif "hours" in a:
+                a = a.split()
+                for word in a:
+                    try:
+                        number = int(word)
+                        number = number * 3600
+                    except:
+                        pass             
+            elif "days" in a:
+                a = a.split()
+                for word in a:
+                    try:
+                        number = int(word)
+                        number = number * 86400
+                    except:
+                        pass     
+            speak(f"I will stop listening for {number} seconds", "Assistant")
+            time.sleep(number)
 
         elif "show on map" in query or "where is" in query:
             query = query.replace("show on map", "")
