@@ -1,7 +1,6 @@
 import subprocess
 import wolframalpha
 import pyttsx3
-from tkinter import *
 import json
 import random
 import operator
@@ -29,6 +28,10 @@ from clint.textui import progress
 from bs4 import BeautifulSoup
 import win32com.client as wincl
 from urllib.request import urlopen
+import base64
+import io
+from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage
+from PIL import Image, ImageTk
 
 webbrowser.register('chrome',
                     None,
@@ -139,8 +142,8 @@ def turn():
 
         #clear()
 
-
-        query = takeCommand().lower()
+        query = "where am i"
+        #query = takeCommand().lower()
         addText(query, "User")
 
         # Надо убрать [] в результатах ответов (транскрипцию, она звучит ужасно)
@@ -433,20 +436,36 @@ def turn():
             url = "wikipedia.com"
             webbrowser.get('chrome').open(url)
 
-        elif "what" in query or "who" in query or "when" in query:
-          app_id = "AQ36PG-QEWLVH4YKE"
-          client = wolframalpha.Client(app_id)
-          res = client.query(query)
+        elif "what" in query or "who" in query or "when" in query or "where" in query:
+            app_id = "AQ36PG-QEWLVH4YKE"
+            client = wolframalpha.Client(app_id)
+            res = client.query(query)
 
-          if res['@success'] == 'false':
-             speak('Question cannot be resolved', "Assistant")
-          else:
-            result = ''
-            pod0 = res['pod'][0]
-            pod1 = res['pod'][1]
-            if (('definition' in pod1['@title'].lower()) or ('result' in  pod1['@title'].lower()) or (pod1.get('@primary','false') == 'true')):
-              result = resolveListOrDict(pod1['subpod'])
-              speak(result, "Assistant")
+            if res['@success'] == 'false':
+                         speak('Question cannot be resolved', "Assistant")
+            else:
+                result = ''
+                pod0 = res['pod'][0]
+                pod1 = res['pod'][1]
+                if (('definition' in pod1['@title'].lower()) or ('result' in  pod1['@title'].lower()) or (pod1.get('@primary','false') == 'true')):
+                    result = resolveListOrDict(pod1['subpod'])
+                    speak(result, "Assistant")
+                else:
+                    answer = Toplevel()
+                    answer.title("display an image")
+                    w = 520
+                    h = 320
+                    x = 80
+                    y = 100
+                    answer.geometry("%dx%d+%d+%d" % (w, h, x, y))
+                    image_url = pod1["subpod"]["img"]["@src"]
+                    image_byt = urlopen(image_url).read()
+                    image_b64 = base64.encodestring(image_byt)
+                    photo = PhotoImage(data=image_b64)
+                    cv = Canvas(master=answer, bg='white')
+                    cv.pack(side='top', fill='both', expand='yes')
+                    cv.create_image(10, 10, image=photo, anchor='nw')
+                    answer.mainloop()
 
         elif "pick a card" in query:
             card_points =['A','K','Q','J','2','3','4','5','6','7','8','9','10']
