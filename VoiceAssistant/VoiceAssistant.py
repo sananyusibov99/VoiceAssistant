@@ -19,6 +19,7 @@ import time
 import requests
 import shutil
 import wmi
+from playsound import playsound
 from ctypes import POINTER, cast
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
@@ -68,6 +69,11 @@ def speak(msg, side):
     engine.say(msg)
     engine.runAndWait()
 
+def resolveListOrDict(variable):
+  if isinstance(variable, list):
+    return variable[0]['plaintext']
+  else:
+    return variable['plaintext']
 
 def wishMe():
     global assname
@@ -352,8 +358,10 @@ def turn():
             time.sleep(a)
             print(a)
 
-        elif "where is" in query:
+        elif "show on map" in query or "where is" in query:
+            query = query.replace("show on map", "")
             query = query.replace("where is", "")
+
             location = query
             speak("User asked to Locate", "Assistant")
             speak(location, "Assistant")
@@ -427,7 +435,52 @@ def turn():
             url = "wikipedia.com"
             webbrowser.get('chrome').open(url)
 
+        elif "what" in query or "who" in query or "when" in query:
+          app_id = "AQ36PG-QEWLVH4YKE"
+          client = wolframalpha.Client(app_id)
+          res = client.query(query)
 
+          if res['@success'] == 'false':
+             speak('Question cannot be resolved', "Assistant")
+          else:
+            result = ''
+            pod0 = res['pod'][0]
+            pod1 = res['pod'][1]
+            if (('definition' in pod1['@title'].lower()) or ('result' in  pod1['@title'].lower()) or (pod1.get('@primary','false') == 'true')):
+              result = resolveListOrDict(pod1['subpod'])
+              speak(result, "Assistant")
+
+        elif "pick a card" in query:
+            card_points =['A','K','Q','J','2','3','4','5','6','7','8','9','10']
+            card_signs =['Heart','CLUB','DIAMOND','SPADE']
+            random_point = random.choice(card_points)
+            random_sign = random.choice(card_signs)
+            random_card = f"{random_point} of {random_sign}"
+            
+            speak(random_card, "Assistant")
+        
+        elif "roll the dice" in query or "roll a dice" in query:
+            speak("One second", "Assistant")
+            playsound("sounds/Dice.mp3")
+            speak(str(random.randint(1,6)), "Assistant")
+
+        elif "toss a coin" in query or "toss the coin" in query:
+            flip = random.randint(0, 1)
+            if (flip == 0):
+                  speak("Heads", "Assistant")
+            else:
+                  speak("Tails", "Assistant")
+
+        elif "pick a number" in query:
+            numbersRange = []
+            words = query.split()
+            for word in words:
+                try:
+                    number = int(word)
+                    numbersRange.append(number)
+                except:
+                    pass                  
+            speak(str(random.randint(numbersRange[0], numbersRange[1])), "Assistant")
 
         # most asked question from google Assistant
         elif "good morning" in query:
