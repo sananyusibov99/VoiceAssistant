@@ -28,6 +28,8 @@ from clint.textui import progress
 from bs4 import BeautifulSoup
 import win32com.client as wincl
 from urllib.request import urlopen
+from io import BytesIO
+from PIL import Image, ImageTk
 
 webbrowser.register('chrome',
                     None,
@@ -510,7 +512,7 @@ def turn():
                 print(str(e))
                 speak("Sorry, i can't do that", "Assistant")
                 
-        elif "search film" or "film" or "movie" in query:
+        elif "search film" in query or "film" in query or "movie" in query:
             speak("What movie, do you want to search ?", "Assistant")
             search = takeCommand()
             
@@ -528,6 +530,7 @@ def turn():
                 for i in range(len(data)):
                     speak("There is movies, i founded", "Assistant")
                     speak(data["titles"][i]["title"], "Assistant")
+                    
 
             except Exception as e:
                 print(str(e))
