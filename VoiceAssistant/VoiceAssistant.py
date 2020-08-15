@@ -33,6 +33,7 @@ import base64
 import io
 from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage
 from PIL import Image, ImageTk
+from cal_setup import get_calendar_service
 
 webbrowser.register('chrome',
                     None,
@@ -143,7 +144,7 @@ def turn():
 
         #clear()
 
-        #query = "don't listen"
+        #query = "open calendar"
         query = takeCommand().lower()
         addText(query, "User")
 
@@ -529,6 +530,32 @@ def turn():
                 except:
                     pass                  
             speak(str(random.randint(numbersRange[0], numbersRange[1])), "Assistant")
+
+        elif "open calendar" in query:
+            service = get_calendar_service()
+            # Call the Calendar API
+            now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+            print('Getting upcoming events for today')
+            events_result = service.events().list(
+                calendarId='primary', timeMin=now,
+                maxResults=10, singleEvents=True,
+                orderBy='startTime').execute()
+            events = events_result.get('items', [])
+            numberOfTodayEvents = 0
+
+            if not events:
+                print('No upcoming events found.')
+            for event in events:
+                start = event['start'].get('dateTime', event['start'].get('date'))
+                eventDate = start.split("T")
+                today = now.split("T")
+                if eventDate[0] == today[0]:
+                    numberOfTodayEvents = numberOfTodayEvents + 1
+                    print(start, event['summary'])
+            if numberOfTodayEvents == 0:
+                print('No upcoming events for today found.')
+            else:
+                print(f"Number of events for today: {numberOfTodayEvents}")
 
         # most asked question from google Assistant
         elif "good morning" in query:
