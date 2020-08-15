@@ -49,6 +49,10 @@ root.minsize(500, 500)
 global assname
 assname = ("i dont know my name yet")
 
+def add_image():
+ 
+    logText.image_create(root.END, image = img)
+
 def deleteText(msg, side):
     logText.configure(state='normal')
     logText.delete(f"[{side}]: " + msg, 'end')
@@ -654,11 +658,17 @@ def turn():
 
                 response = requests.request("GET", url, headers=headers)
                 data = json.loads(response.text)
+                
 
+                panel = Label(root, image = img)
+                panel.pack()
                 for i in range(len(data)):
                     speak("There is movies, i founded", "Assistant")
                     speak(data["titles"][i]["title"], "Assistant")
-
+                    img_response = requests.get(data["titles"][i]["image"])
+    
+                    img = ImageTk.PhotoImage(Image.open(BytesIO(img_response.content)))
+                    add_image()
             except Exception as e:
                 print(str(e))
                 speak("Sorry, i can't do that", "Assistant")
