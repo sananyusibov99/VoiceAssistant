@@ -144,8 +144,8 @@ def turn():
 
         #clear()
 
-        #query = "open calendar"
-        query = takeCommand().lower()
+        query = "open calendar"
+        #query = takeCommand().lower()
         addText(query, "User")
 
         if 'wikipedia' in query:
@@ -535,7 +535,7 @@ def turn():
             service = get_calendar_service()
             # Call the Calendar API
             now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-            print('Getting upcoming events for today')
+            speak('Getting upcoming events for today', "Assistant")
             events_result = service.events().list(
                 calendarId='primary', timeMin=now,
                 maxResults=10, singleEvents=True,
@@ -544,18 +544,21 @@ def turn():
             numberOfTodayEvents = 0
 
             if not events:
-                print('No upcoming events found.')
+                speak('No upcoming events found.', "Assistant")
             for event in events:
                 start = event['start'].get('dateTime', event['start'].get('date'))
                 eventDate = start.split("T")
                 today = now.split("T")
                 if eventDate[0] == today[0]:
                     numberOfTodayEvents = numberOfTodayEvents + 1
-                    print(start, event['summary'])
+                    eventTime = eventDate[1].split(":")
+                    speak(f"At {eventTime[0]} :{eventTime[1]} you have {event['summary']}", "Assistant")
+                    #print(eventTime[0] + ":" +  eventTime[1] + "    " +  event['summary'])
+                    #print(event)
             if numberOfTodayEvents == 0:
-                print('No upcoming events for today found.')
+                speak('No upcoming events for today found.', "Assistant")
             else:
-                print(f"Number of events for today: {numberOfTodayEvents}")
+                speak(f"Total number of events for today: {numberOfTodayEvents}", "Assistant")
 
         # most asked question from google Assistant
         elif "good morning" in query:
@@ -567,14 +570,11 @@ def turn():
             speak("I'm fine, glad you me that", "Assistant")
         elif "i love you" in query:
             speak("It's hard to understand", "Assistant")
-
         elif 'how are you' in query:
             speak("I am fine, Thank you", "Assistant")
             speak("How are you, Sir", "Assistant")
-
         elif 'fine' in query or "good" in query:
             speak("It's good to know that your fine", "Assistant")
-
         elif 'convert currency' in query:
             speak("Tell me first currency", "Assistant")
             first_currency = takeCommand()
