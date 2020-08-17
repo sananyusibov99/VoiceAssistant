@@ -34,6 +34,11 @@ import io
 from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage
 from PIL import Image, ImageTk
 from cal_setup import get_calendar_service
+import pathlib
+from playsound import playsound
+import os
+import shutil
+import csv
 
 webbrowser.register('chrome',
                     None,
@@ -70,11 +75,59 @@ def addText(msg, side):
     logText.configure(state='disabled')
     root.update()
 
-
 def speak(msg, side):
     addText(msg, side)
-    engine.say(msg)
-    engine.runAndWait()
+    # Считывает все имеющиеся звуки
+    with open('samples/table.csv', mode='r') as infile:
+        reader = csv.reader(infile)
+        mydict = {rows[0]: rows[1] for rows in reader}
+
+    # Если текст уже синтезирован то проигрывает его
+    if mydict.get(msg):
+        playsound(f"sounds/{mydict.get(msg)}.wav")
+    # Если текст не существует синтезирует его
+    else:
+        # Добавляется в текстовый файл для последущей синтезации
+        f = open("harvard_sentences.txt", "a")
+        f.truncate(0)
+        f.write("http://www.cs.columbia.edu/~hgs/audio/harvard.html\n")
+        f.write(msg)
+        f.close()
+
+        # Вызывается синтез
+        os.system("python synthesize.py")
+
+        # Подсчет сколько файлов уже синтезировано
+        cwd = os.getcwd()
+        cwd = cwd + "\sounds"
+        os.chdir(cwd)
+        print(cwd)
+        count = 0
+        for path in pathlib.Path(".").iterdir():
+            if path.is_file():
+                count += 1
+        print(count)
+
+        # Перенос нового файла к уже сохраненным файлам
+        cwd = cwd.replace("\sounds", "")
+        original = f'{cwd}\samples\\1.wav'
+        target = f'{cwd}\sounds\\{count + 1}.wav'
+
+        shutil.move(original, target)
+
+        # Проигрывание нового файла
+        playsound(f"{count + 1}.wav")
+
+        # Добавление файла в таблицу для последущего использования
+        os.chdir(cwd)
+        with open('samples/table.csv', 'a+', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow([msg, count + 1])
+
+# def speak(msg, side):
+#     addText(msg, side)
+#     engine.say(msg)
+#     engine.runAndWait()
 
 def resolveListOrDict(variable):
   if isinstance(variable, list):
@@ -148,7 +201,7 @@ def turn():
 
         #clear()
 
-        query = "open calendar"
+        query = "open stack overflow"
         #query = takeCommand().lower()
         addText(query, "User")
 

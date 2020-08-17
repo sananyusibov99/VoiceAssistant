@@ -25,14 +25,25 @@
     <Compile Include="cal_setup.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="data_load.py" />
+    <Compile Include="hyperparams.py" />
+    <Compile Include="modules.py" />
+    <Compile Include="networks.py" />
+    <Compile Include="prepo.py" />
+    <Compile Include="synthesize.py" />
     <Compile Include="test.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="train.py" />
+    <Compile Include="utils.py" />
     <Compile Include="VoiceAssistant.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="img\mic.png" />
     <Content Include="requirements.txt" />
+    <Content Include="samples\table.csv" />
+    <Content Include="sounds\1.wav" />
+    <Content Include="sounds\2.wav" />
     <Content Include="sounds\Dice.mp3" />
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="img\" />
+    <Folder Include="samples\" />
     <Folder Include="sounds\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
