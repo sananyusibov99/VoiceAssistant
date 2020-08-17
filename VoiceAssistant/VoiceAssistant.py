@@ -85,14 +85,15 @@ def speak(msg, side):
         mydict = {rows[0]: rows[1] for rows in reader}
 
     # Если текст уже синтезирован то проигрывает его
-    if mydict.get(msg):
-        playsound(f"sounds/{mydict.get(msg)}.wav")
+    if mydict.get(msg.lower()):
+        playsound(f"sounds/{mydict.get(msg.lower())}.wav")
     # Если текст не существует синтезирует его
     else:
         # Добавляется в текстовый файл для последущей синтезации
         f = open("harvard_sentences.txt", "a")
         f.truncate(0)
         f.write("http://www.cs.columbia.edu/~hgs/audio/harvard.html\n")
+        msg = msg.lower()
         f.write(msg)
         f.close()
 
@@ -206,7 +207,7 @@ def turn():
 
     # clear()
 
-    query = "open stack overflow"
+    query = "open google"
     # query = takeCommand().lower()
     addText(query, "User")
 
@@ -220,12 +221,12 @@ def turn():
         speak(" " + results, "Assistant")
 
     elif 'open youtube' in query:
-        speak(" Here you go to Youtube\n", "Assistant")
+        speak(" Here you go to Youtube", "Assistant")
         url = "youtube.com"
         webbrowser.get('chrome').open(url)
 
     elif 'open google' in query:
-        speak(" Here you go to Google\n", "Assistant")
+        speak(" Here you go to Google", "Assistant")
         url = "google.com"
         webbrowser.get('chrome').open(url)
 
@@ -676,6 +677,7 @@ def turn():
         except Exception as e:
             print(str(e))
             speak(" Sorry, i can't do that", "Assistant")
+
 
     elif 'convert units' in query:
         speak(" Tell me first unit", "Assistant")
