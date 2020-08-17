@@ -95,7 +95,7 @@ def speak(msg, side):
         f.close()
 
         # Вызывается синтез
-        os.system("python synthesize.py")
+        os.system("synthesize.py")
 
         # Подсчет сколько файлов уже синтезировано
         cwd = os.getcwd()
@@ -140,23 +140,23 @@ def wishMe():
     hour = int(datetime.datetime.now().hour)
 
     if hour >= 0 and hour < 12:
-        speak("Good Morning Sir !", "Assistant")
+        speak(" Good Morning Sir !", "Assistant")
     elif hour >= 12 and hour < 18:
-        speak("Good Afternoon Sir !", "Assistant")
+        speak(" Good Afternoon Sir !", "Assistant")
     else:
-        speak("Good Evening Sir !", "Assistant")
-    speak("I am your Assistant", "Assistant")
-    assname = ("i dont know my name yet")
+        speak(" Good Evening Sir !", "Assistant")
+    speak(" I am your Assistant", "Assistant")
+    assname = (" i dont know my name yet")
     speak(assname, "Assistant")
 
 
 def usrname():
     global uname
-    speak("What should i call you sir", "Assistant")
+    speak(" What should i call you sir", "Assistant")
     uname = takeCommand()
     addText(uname, "User")
-    speak("Welcome Mister", "Assistant")
-    speak(uname, "Assistant")
+    speak(" Welcome Mister", "Assistant")
+    speak(" " + uname, "Assistant")
 
 
 def takeCommand():
@@ -175,8 +175,8 @@ def takeCommand():
         print(f"User said: {query}\n")
 
     except Exception as e:
-        speak(str(e), "Assistant")
-        speak("Unable to Recognizing your voice.", "Assistant")
+        #speak(str(e), "Assistant")
+        speak(" Unable to Recognizing your voice.", "Assistant")
         return "None"
 
     return query
@@ -206,26 +206,26 @@ def turn():
         addText(query, "User")
 
         if 'wikipedia' in query:
-            speak('Searching Wikipedia...', "Assistant")
+            speak(" Searching Wikipedia...", "Assistant")
             query = query.replace("wikipedia", "")
             results = wikipedia.summary(query, sentences=3)
-            speak("According to Wikipedia", "Assistant")
+            speak(" According to Wikipedia", "Assistant")
             results =  re.sub("[\[].*?[\]]", "", results)
             print(results)
-            speak(results, "Assistant")
+            speak(" " + results, "Assistant")
 
         elif 'open youtube' in query:
-            speak("Here you go to Youtube\n", "Assistant")
+            speak(" Here you go to Youtube\n", "Assistant")
             url = "youtube.com"
             webbrowser.get('chrome').open(url)
 
         elif 'open google' in query:
-            speak("Here you go to Google\n", "Assistant")
+            speak(" Here you go to Google\n", "Assistant")
             url = "google.com"
             webbrowser.get('chrome').open(url)
 
         elif 'open stack overflow' in query:
-            speak("Here you go to Stack Over flow.Happy coding", "Assistant")
+            speak(" Here you go to Stack Over flow.Happy coding", "Assistant")
             url = "stackoverflow.com"
             webbrowser.get('chrome').open(url)
 
@@ -239,7 +239,7 @@ def turn():
                     word = int(word)
                     methods = c.WmiMonitorBrightnessMethods()[0]
                     methods.WmiSetBrightness(word, 0)
-                    speak(f"Brightness was set to {word} percent", "Assistant")
+                    speak(f" Brightness was set to {word} percent", "Assistant")
                 except Exception as e:
                     pass
 
@@ -250,9 +250,9 @@ def turn():
             if brightness < 100:
                 methods = c.WmiMonitorBrightnessMethods()[0]
                 methods.WmiSetBrightness(brightness, 0)
-                speak(f"Brightness was increased, current brightness is {brightness}", "Assistant")
+                speak(f" Brightness was increased, current brightness is {brightness}", "Assistant")
             else:
-                speak("Brightness is maximum", "Assistant")
+                speak(" Brightness is maximum", "Assistant")
 
         elif "decrease brightness" in query:
             c = wmi.WMI(namespace='wmi')
@@ -261,9 +261,9 @@ def turn():
             if brightness > 5:
                 methods = c.WmiMonitorBrightnessMethods()[0]
                 methods.WmiSetBrightness(brightness, 0)
-                speak(f"Brightness was decreased, current brightness is {brightness}", "Assistant")
+                speak(f" Brightness was decreased, current brightness is {brightness}", "Assistant")
             else:
-                speak("Brightness is minimum", "Assistant")
+                speak(" Brightness is minimum", "Assistant")
         
         elif "unmute" in query:
             devices = AudioUtilities.GetSpeakers()
@@ -271,7 +271,7 @@ def turn():
                 IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
             volume = cast(interface, POINTER(IAudioEndpointVolume))
             volume.SetMute(0, None);
-            speak("Volume is unmuted", "Assistant")
+            speak(" Volume is unmuted", "Assistant")
 
         elif "mute" in query:
             devices = AudioUtilities.GetSpeakers()
@@ -279,7 +279,7 @@ def turn():
                 IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
             volume = cast(interface, POINTER(IAudioEndpointVolume))
             volume.SetMute(1, None);
-            speak("Volume is muted", "Assistant")
+            speak(" Volume is muted", "Assistant")
 
         elif "set volume to" in query:
             devices = AudioUtilities.GetSpeakers()
@@ -293,7 +293,7 @@ def turn():
                     needWin = int(word)
                     needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
                     volume.SetMasterVolumeLevel(needDb, None)
-                    speak(f"Current volume was set to {needWin}", "Assistant")
+                    speak(f" Current volume was set to {needWin}", "Assistant")
                 except Exception as e:
                     pass
 
@@ -308,7 +308,7 @@ def turn():
             needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
             volume.SetMasterVolumeLevel(needDb, None)
             needWin = math.trunc(needWin)
-            speak(f"Current volume is {needWin}", "Assistant")
+            speak(f" Current volume is {needWin}", "Assistant")
 
         elif "decrease volume" in query:
             devices = AudioUtilities.GetSpeakers()
@@ -321,17 +321,17 @@ def turn():
             needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
             volume.SetMasterVolumeLevel(needDb, None)
             needWin = math.trunc(needWin)
-            speak(f"Current volume is {needWin}", "Assistant")
+            speak(f" Current volume is {needWin}", "Assistant")
 
         elif 'the time' in query or 'time' in query:
             now = datetime.datetime.now()
             strTime = now.strftime("%H:%M:%S")
-            speak(f"Sir, the time is {strTime}", "Assistant")
+            speak(f" Sir, the time is {strTime}", "Assistant")
 
         elif 'date is it' in query or 'date' in query:
             now = datetime.datetime.now()
             strTime = now.strftime("%d %B, %Y")
-            speak(f"Sir, the date is {strTime}", "Assistant")
+            speak(f" Sir, the date is {strTime}", "Assistant")
 
         # хорошая идея с открытием сторонних приложений
         # elif 'open opera' in query:
@@ -343,22 +343,22 @@ def turn():
             uname = query
 
         elif "change name" in query:
-            speak("What would you like to call me, Sir ", "Assistant")
+            speak(" What would you like to call me, Sir ", "Assistant")
             assname = takeCommand()
             addText(assname, "User")
-            speak("Thanks for naming me", "Assistant")
+            speak(" Thanks for naming me", "Assistant")
 
         elif "what's your name" in query or "What is your name" in query:
-            speak("My friends call me", "Assistant")
-            speak(assname, "Assistant")
+            speak(" My friends call me", "Assistant")
+            speak(" " + assname, "Assistant")
             print("My friends call me", assname)
 
         elif 'exit' in query:
-            speak("Thanks for giving me your time", "Assistant")
+            speak(" Thanks for giving me your time", "Assistant")
             exit()
 
         elif 'joke' in query:
-            speak(pyjokes.get_joke(), "Assistant")
+            speak(" " + pyjokes.get_joke(), "Assistant")
 
         elif 'search' in query or 'play' in query:
             query = query.replace("search", "")
@@ -367,15 +367,15 @@ def turn():
             webbrowser.open(f'https://www.google.com/search?q={query}')
 
         elif "who i am" in query:
-            speak("If you talk then definately your human.", "Assistant")
+            speak(" If you talk then definately your human.", "Assistant")
         elif "why you came to world" in query:
-            speak("I came to this world to help people", "Assistant")
+            speak(" I came to this world to help people", "Assistant")
 
         elif 'is love' in query:
-            speak("It is 7th sense that destroy all other senses", "Assistant")
+            speak(" It is 7th sense that destroy all other senses", "Assistant")
 
         elif "who are you" in query:
-            speak("I am your virtual assistant created by STEP IT Team", "Assistant")
+            speak(" I am your virtual assistant created by STEP IT Team", "Assistant")
 
         elif 'news' in query:
             try:
@@ -385,33 +385,33 @@ def turn():
                 data = json.load(jsonObj)
                 i = 1
 
-                speak('here are some top news from the times of USA', "Assistant")
+                speak(" Here are some top news from the times of USA", "Assistant")
                 print('''=============== TIMES OF USA ============''' + '\n')
 
                 for item in data['articles']:
                     print(str(i) + '. ' + item['title'] + '\n')
                     print(item['description'] + '\n')
-                    speak(str(i) + '. ' + item['title'] + '\n', "Assistant")
+                    speak(" " + str(i) + '. ' + item['title'] + '\n', "Assistant")
                     i += 1
             except Exception as e:
 
                 print(str(e))
 
         elif 'lock window' in query:
-            speak("locking the device", "Assistant")
+            speak(" Locking the device", "Assistant")
             ctypes.windll.user32.LockWorkStation()
 
         elif 'shutdown system' in query:
-            speak("Hold On a Sec ! Your system is on its way to shut down", "Assistant")
+            speak(" Hold On a Sec ! Your system is on its way to shut down", "Assistant")
             subprocess.call('shutdown / p /f')
 
         elif 'empty recycle bin' in query:
             winshell.recycle_bin().empty(confirm=False, show_progress=False, sound=True)
-            speak("Recycle Bin Recycled", "Assistant")
+            speak(" Recycle Bin Recycled", "Assistant")
 
         #Работать должно только в режиме безостановочной работы
         elif "don't listen" in query or "stop listening" in query:
-            speak("for how much time you want to stop me from listening commands", "Assistant")
+            speak(" For how much time you want to stop me from listening commands", "Assistant")
             a = takeCommand()     
             if "seconds" in a:
                 a = a.split()
@@ -445,7 +445,7 @@ def turn():
                         number = number * 86400
                     except:
                         pass     
-            speak(f"I will stop listening for {number} seconds", "Assistant")
+            speak(f" I will stop listening for {number} seconds", "Assistant")
             time.sleep(number)
 
         elif "show on map" in query or "where is" in query:
@@ -453,27 +453,27 @@ def turn():
             query = query.replace("where is", "")
 
             location = query
-            speak("User asked to Locate", "Assistant")
-            speak(location, "Assistant")
+            speak(" User asked to Locate", "Assistant")
+            speak(" " + location, "Assistant")
             webbrowser.get('chrome').open("https://www.google.nl/maps/place/" + location + "")
 
         elif "restart" in query:
             subprocess.call(["shutdown", "/r"])
 
         elif "hibernate" in query or "sleep" in query:
-            speak("Hibernating", "Assistant")
+            speak(" Hibernating", "Assistant")
             subprocess.call("shutdown / h")
 
         elif "log off" in query or "sign out" in query:
-            speak("Make sure all the application are closed before sign-out", "Assistant")
+            speak(" Make sure all the application are closed before sign-out", "Assistant")
             time.sleep(5)
             subprocess.call(["shutdown", "/l"])
 
         elif "write a note" in query:
-            speak("What should i write, sir", "Assistant")
+            speak(" What should i write, sir", "Assistant")
             note = takeCommand()
             file = open('jarvis.txt', 'w')
-            speak("Sir, Should i include date and time", "Assistant")
+            speak(" Sir, Should i include date and time", "Assistant")
             snfm = takeCommand()
             if 'yes' in snfm or 'sure' in snfm:
                 now = datetime.datetime.now()
@@ -485,11 +485,11 @@ def turn():
                 file.write(note)
 
         elif "show note" in query:
-            speak("Showing Notes", "Assistant")
+            speak(" Showing Notes", "Assistant")
             file = open("jarvis.txt", "r")
             note = file.read()
             print(note)
-            speak(note, "Assistant")
+            speak(" " + note, "Assistant")
 
         elif "weather" in query:
             # Google Open weather website
@@ -515,7 +515,7 @@ def turn():
                     current_temperature) + "\n atmospheric pressure (in hPa unit) =" + str(
                     current_pressure) + "\n humidity (in percentage) = " + str(
                     current_humidiy) + "\n description = " + str(weather_description))
-                speak(f"Current temperature is: {current_temperature} degree Celsius", "Assistant")
+                speak(f" Current temperature is: {current_temperature} degree Celsius", "Assistant")
                 #speak("", "Assistant")
 
             else:
@@ -531,14 +531,14 @@ def turn():
             res = client.query(query)
 
             if res['@success'] == 'false':
-                         speak('Question cannot be resolved', "Assistant")
+                speak(" Question cannot be resolved", "Assistant")
             else:
                 result = ''
                 pod0 = res['pod'][0]
                 pod1 = res['pod'][1]
                 if (('definition' in pod1['@title'].lower()) or ('result' in  pod1['@title'].lower()) or (pod1.get('@primary','false') == 'true')):
                     result = resolveListOrDict(pod1['subpod'])
-                    speak(result, "Assistant")
+                    speak(" " + result, "Assistant")
                 else:
                     answer = Toplevel()
                     answer.title("display an image")
@@ -563,19 +563,19 @@ def turn():
             random_sign = random.choice(card_signs)
             random_card = f"{random_point} of {random_sign}"
             
-            speak(random_card, "Assistant")
+            speak(" " + random_card, "Assistant")
         
         elif "roll the dice" in query or "roll a dice" in query:
-            speak("One second", "Assistant")
+            speak(" One second", "Assistant")
             playsound("sounds/Dice.mp3")
-            speak(str(random.randint(1,6)), "Assistant")
+            speak(" " + str(random.randint(1,6)), "Assistant")
 
         elif "toss a coin" in query or "toss the coin" in query:
             flip = random.randint(0, 1)
             if (flip == 0):
-                  speak("Heads", "Assistant")
+                  speak(" Heads", "Assistant")
             else:
-                  speak("Tails", "Assistant")
+                  speak(" Tails", "Assistant")
 
         elif "pick a number" in query:
             numbersRange = []
@@ -586,13 +586,13 @@ def turn():
                     numbersRange.append(number)
                 except:
                     pass                  
-            speak(str(random.randint(numbersRange[0], numbersRange[1])), "Assistant")
+            speak(" " + str(random.randint(numbersRange[0], numbersRange[1])), "Assistant")
 
         elif "open calendar" in query:
             service = get_calendar_service()
             # Call the Calendar API
             now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-            speak('Getting upcoming events for today', "Assistant")
+            speak(" Getting upcoming events for today", "Assistant")
             events_result = service.events().list(
                 calendarId='primary', timeMin=now,
                 maxResults=10, singleEvents=True,
@@ -601,7 +601,7 @@ def turn():
             numberOfTodayEvents = 0
 
             if not events:
-                speak('No upcoming events found.', "Assistant")
+                speak(" No upcoming events found.", "Assistant")
             for event in events:
                 start = event['start'].get('dateTime', event['start'].get('date'))
                 eventDate = start.split("T")
@@ -609,39 +609,39 @@ def turn():
                 if eventDate[0] == today[0]:
                     numberOfTodayEvents = numberOfTodayEvents + 1
                     eventTime = eventDate[1].split(":")
-                    speak(f"At {eventTime[0]} :{eventTime[1]} you have {event['summary']}", "Assistant")
+                    speak(f" At {eventTime[0]} :{eventTime[1]} you have {event['summary']}", "Assistant")
                     #print(eventTime[0] + ":" +  eventTime[1] + "    " +  event['summary'])
                     #print(event)
             if numberOfTodayEvents == 0:
-                speak('No upcoming events for today found.', "Assistant")
+                speak(" No upcoming events for today found.", "Assistant")
             else:
-                speak(f"Total number of events for today: {numberOfTodayEvents}", "Assistant")
+                speak(f" Total number of events for today: {numberOfTodayEvents}", "Assistant")
 
         # most asked question from google Assistant
         elif "good morning" in query:
-            speak("A warm" + query, "Assistant")
-            speak("How are you Mister", "Assistant")
+            speak(" A warm" + query, "Assistant")
+            speak(" How are you Mister", "Assistant")
         elif "will you be my girlfriend" in query or "will you be my boyfriend" in query:
-            speak("I'm not sure about, may be you should give me some time", "Assistant")
+            speak(" I'm not sure about, may be you should give me some time", "Assistant")
         elif "how are you" in query:
-            speak("I'm fine, glad you me that", "Assistant")
+            speak(" I'm fine, glad you me that", "Assistant")
         elif "i love you" in query:
-            speak("It's hard to understand", "Assistant")
+            speak(" It's hard to understand", "Assistant")
         elif 'how are you' in query:
-            speak("I am fine, Thank you", "Assistant")
-            speak("How are you, Sir", "Assistant")
+            speak(" I am fine, Thank you", "Assistant")
+            speak(" How are you, Sir", "Assistant")
         elif 'fine' in query or "good" in query:
-            speak("It's good to know that your fine", "Assistant")
+            speak(" It's good to know that your fine", "Assistant")
         elif 'convert currency' in query:
-            speak("Tell me first currency", "Assistant")
+            speak(" Tell me first currency", "Assistant")
             first_currency = takeCommand()
             addText(first_currency, "User")
 
-            speak("Tell me second currency", "Assistant")
+            speak(" Tell me second currency", "Assistant")
             second_currency = takeCommand()
             addText(second_currency, "User")
 
-            speak("Tell me count", "Assistant")
+            speak(" Tell me count", "Assistant")
             value = takeCommand()
             addText(value, "User")
             value = int(value)
@@ -658,23 +658,23 @@ def turn():
                 data = json.loads(response.text)
                 answer = data["result"]["value"]
                 answer = float("{0:.1f}".format(answer))
-                speak(f"{value} {first_currency} is {answer} {second_currency}", "Assistant")
+                speak(f" {value} {first_currency} is {answer} {second_currency}", "Assistant")
 
             except Exception as e:
                 print(str(e))
-                speak("Sorry, i can't do that", "Assistant")
+                speak(" Sorry, i can't do that", "Assistant")
 
 
         elif 'convert units' in query:
-            speak("Tell me first unit", "Assistant")
+            speak(" Tell me first unit", "Assistant")
             first_unit= takeCommand()
             addText(first_unit, "User")
 
-            speak("Tell me second unit", "Assistant")
+            speak(" Tell me second unit", "Assistant")
             second_unit = takeCommand()
             addText(second_unit, "User")
 
-            speak("Tell me count", "Assistant")
+            speak(" Tell me count", "Assistant")
             value = takeCommand()
             addText(value, "User")
             value = int(value)
@@ -692,13 +692,13 @@ def turn():
                 response = requests.request("POST", url, data=payload, headers=headers)
                 data = json.loads(response.text)
                 answer = data["result"]
-                speak(f"{value} {first_unit} is {answer} {second_unit}", "Assistant")
+                speak(f" {value} {first_unit} is {answer} {second_unit}", "Assistant")
             except Exception as e:
                 print(str(e))
-                speak("Sorry, i can't do that", "Assistant")
+                speak(" Sorry, i can't do that", "Assistant")
                 
         elif "search film" in query or "film" in query or "movie" in query:
-            speak("What movie, do you want to search ?", "Assistant")
+            speak(" What movie, do you want to search ?", "Assistant")
             search = takeCommand()
             
             try:
@@ -716,15 +716,15 @@ def turn():
                 panel = Label(root, image = img)
                 panel.pack()
                 for i in range(len(data)):
-                    speak("There is movies, i founded", "Assistant")
-                    speak(data["titles"][i]["title"], "Assistant")
+                    speak(" There is movies, i founded", "Assistant")
+                    speak(" " + data["titles"][i]["title"], "Assistant")
                     img_response = requests.get(data["titles"][i]["image"])
     
                     img = ImageTk.PhotoImage(Image.open(BytesIO(img_response.content)))
                     add_image()
             except Exception as e:
                 print(str(e))
-                speak("Sorry, i can't do that", "Assistant")
+                speak(" Sorry, i can't do that", "Assistant")
 
 #speak_image = PhotoImage(file="img/mic.png")
 #button_speak = Button(command=turn, image=speak_image).pack()
