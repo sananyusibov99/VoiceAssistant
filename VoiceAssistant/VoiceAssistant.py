@@ -12,7 +12,7 @@ import os
 import re
 import winshell
 import pyjokes
-import feedparser 
+import feedparser
 import smtplib
 import ctypes
 import time
@@ -52,11 +52,12 @@ root = Tk()
 root.title("Voice Assistant")
 root.minsize(500, 500)
 global assname
-assname = ("i dont know my name yet")
+assname = "i don't know my name yet"
+
 
 def add_image():
- 
-    logText.image_create(root.END, image = img)
+    logText.image_create(root.END, image=img)
+
 
 def deleteText(msg, side):
     logText.configure(state='normal')
@@ -74,6 +75,7 @@ def addText(msg, side):
         logText.insert("end", text, "user")
     logText.configure(state='disabled')
     root.update()
+
 
 def speak(msg, side):
     addText(msg, side)
@@ -124,16 +126,19 @@ def speak(msg, side):
             writer = csv.writer(file)
             writer.writerow([msg, count + 1])
 
+
 # def speak(msg, side):
 #     addText(msg, side)
 #     engine.say(msg)
 #     engine.runAndWait()
 
+
 def resolveListOrDict(variable):
-  if isinstance(variable, list):
-    return variable[0]['plaintext']
-  else:
-    return variable['plaintext']
+    if isinstance(variable, list):
+        return variable[0]['plaintext']
+    else:
+        return variable['plaintext']
+
 
 def wishMe():
     global assname
@@ -175,7 +180,7 @@ def takeCommand():
         print(f"User said: {query}\n")
 
     except Exception as e:
-        #speak(str(e), "Assistant")
+        # speak(str(e), "Assistant")
         speak(" Unable to Recognizing your voice.", "Assistant")
         return "None"
 
@@ -195,539 +200,546 @@ def sendEmail(to, content):
 
 
 def turn():
-        global uname
-        global assname
-        #clear = lambda: os.system('cls')
+    global uname
+    global assname
+    # clear = lambda: os.system('cls')
 
-        #clear()
+    # clear()
 
-        query = "open stack overflow"
-        #query = takeCommand().lower()
-        addText(query, "User")
+    query = "open stack overflow"
+    # query = takeCommand().lower()
+    addText(query, "User")
 
-        if 'wikipedia' in query:
-            speak(" Searching Wikipedia...", "Assistant")
-            query = query.replace("wikipedia", "")
-            results = wikipedia.summary(query, sentences=3)
-            speak(" According to Wikipedia", "Assistant")
-            results =  re.sub("[\[].*?[\]]", "", results)
-            print(results)
-            speak(" " + results, "Assistant")
+    if 'wikipedia' in query:
+        speak(" Searching Wikipedia...", "Assistant")
+        query = query.replace("wikipedia", "")
+        results = wikipedia.summary(query, sentences=3)
+        speak(" According to Wikipedia", "Assistant")
+        results = re.sub("[\[].*?[\]]", "", results)
+        print(results)
+        speak(" " + results, "Assistant")
 
-        elif 'open youtube' in query:
-            speak(" Here you go to Youtube\n", "Assistant")
-            url = "youtube.com"
-            webbrowser.get('chrome').open(url)
+    elif 'open youtube' in query:
+        speak(" Here you go to Youtube\n", "Assistant")
+        url = "youtube.com"
+        webbrowser.get('chrome').open(url)
 
-        elif 'open google' in query:
-            speak(" Here you go to Google\n", "Assistant")
-            url = "google.com"
-            webbrowser.get('chrome').open(url)
+    elif 'open google' in query:
+        speak(" Here you go to Google\n", "Assistant")
+        url = "google.com"
+        webbrowser.get('chrome').open(url)
 
-        elif 'open stack overflow' in query:
-            speak(" Here you go to Stack Over flow.Happy coding", "Assistant")
-            url = "stackoverflow.com"
-            webbrowser.get('chrome').open(url)
+    elif 'open stack overflow' in query:
+        speak(" Here you go to Stack Over flow.Happy coding", "Assistant")
+        url = "stackoverflow.com"
+        webbrowser.get('chrome').open(url)
 
-        #System
-        elif "set brightness to" in query:
-            c = wmi.WMI(namespace='wmi')
-            words = query.split()
-            for word in words:
-                word = word.replace('%', '')
-                try:
-                    word = int(word)
-                    methods = c.WmiMonitorBrightnessMethods()[0]
-                    methods.WmiSetBrightness(word, 0)
-                    speak(f" Brightness was set to {word} percent", "Assistant")
-                except Exception as e:
-                    pass
-
-        elif "increase brightness" in query:
-            c = wmi.WMI(namespace='wmi')
-            current = c.WmiMonitorBrightness()[0]
-            brightness = current.CurrentBrightness + 10
-            if brightness < 100:
-                methods = c.WmiMonitorBrightnessMethods()[0]
-                methods.WmiSetBrightness(brightness, 0)
-                speak(f" Brightness was increased, current brightness is {brightness}", "Assistant")
-            else:
-                speak(" Brightness is maximum", "Assistant")
-
-        elif "decrease brightness" in query:
-            c = wmi.WMI(namespace='wmi')
-            current = c.WmiMonitorBrightness()[0]
-            brightness = current.CurrentBrightness - 10
-            if brightness > 5:
-                methods = c.WmiMonitorBrightnessMethods()[0]
-                methods.WmiSetBrightness(brightness, 0)
-                speak(f" Brightness was decreased, current brightness is {brightness}", "Assistant")
-            else:
-                speak(" Brightness is minimum", "Assistant")
-        
-        elif "unmute" in query:
-            devices = AudioUtilities.GetSpeakers()
-            interface = devices.Activate(
-                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
-            volume = cast(interface, POINTER(IAudioEndpointVolume))
-            volume.SetMute(0, None);
-            speak(" Volume is unmuted", "Assistant")
-
-        elif "mute" in query:
-            devices = AudioUtilities.GetSpeakers()
-            interface = devices.Activate(
-                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
-            volume = cast(interface, POINTER(IAudioEndpointVolume))
-            volume.SetMute(1, None);
-            speak(" Volume is muted", "Assistant")
-
-        elif "set volume to" in query:
-            devices = AudioUtilities.GetSpeakers()
-            interface = devices.Activate(
-                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
-            volume = cast(interface, POINTER(IAudioEndpointVolume))
-            words = query.split()
-            for word in words:
-                word = word.replace('%', '')
-                try:
-                    needWin = int(word)
-                    needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
-                    volume.SetMasterVolumeLevel(needDb, None)
-                    speak(f" Current volume was set to {needWin}", "Assistant")
-                except Exception as e:
-                    pass
-
-        elif "increase volume" in query:
-            devices = AudioUtilities.GetSpeakers()
-            interface = devices.Activate(
-                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
-            volume = cast(interface, POINTER(IAudioEndpointVolume))
-            currentDb = volume.GetMasterVolumeLevel()
-            currentWin = 24.3738*math.pow((-(90.3712/(currentDb-25.0589))-1), 1.477575428748062)
-            needWin = currentWin + 10
-            needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
-            volume.SetMasterVolumeLevel(needDb, None)
-            needWin = math.trunc(needWin)
-            speak(f" Current volume is {needWin}", "Assistant")
-
-        elif "decrease volume" in query:
-            devices = AudioUtilities.GetSpeakers()
-            interface = devices.Activate(
-                IAudioEndpointVolume._iid_, CLSCTX_ALL, None)   
-            volume = cast(interface, POINTER(IAudioEndpointVolume))
-            currentDb = volume.GetMasterVolumeLevel()
-            currentWin = 24.3738*math.pow((-(90.3712/(currentDb-25.0589))-1), 1.477575428748062)
-            needWin = currentWin - 10
-            needDb = 25.05889+(-65.31229-25.05889)/(1+math.pow((needWin/24.37377),(0.6767844)))
-            volume.SetMasterVolumeLevel(needDb, None)
-            needWin = math.trunc(needWin)
-            speak(f" Current volume is {needWin}", "Assistant")
-
-        elif 'the time' in query or 'time' in query:
-            now = datetime.datetime.now()
-            strTime = now.strftime("%H:%M:%S")
-            speak(f" Sir, the time is {strTime}", "Assistant")
-
-        elif 'date is it' in query or 'date' in query:
-            now = datetime.datetime.now()
-            strTime = now.strftime("%d %B, %Y")
-            speak(f" Sir, the date is {strTime}", "Assistant")
-
-        # хорошая идея с открытием сторонних приложений
-        # elif 'open opera' in query:
-        #     codePath = r"C:\\Users\\...\\AppData\\Local\\Programs\\Opera\\launcher.exe"
-        #     os.startfile(codePath)
-
-        elif "change my name to" in query:
-            query = query.replace("change my name to", "")
-            uname = query
-
-        elif "change name" in query:
-            speak(" What would you like to call me, Sir ", "Assistant")
-            assname = takeCommand()
-            addText(assname, "User")
-            speak(" Thanks for naming me", "Assistant")
-
-        elif "what's your name" in query or "What is your name" in query:
-            speak(" My friends call me", "Assistant")
-            speak(" " + assname, "Assistant")
-            print("My friends call me", assname)
-
-        elif 'exit' in query:
-            speak(" Thanks for giving me your time", "Assistant")
-            exit()
-
-        elif 'joke' in query:
-            speak(" " + pyjokes.get_joke(), "Assistant")
-
-        elif 'search' in query or 'play' in query:
-            query = query.replace("search", "")
-            query = query.replace("play", "")
-            webbrowser.get('chrome').open(query)
-            webbrowser.open(f'https://www.google.com/search?q={query}')
-
-        elif "who i am" in query:
-            speak(" If you talk then definately your human.", "Assistant")
-        elif "why you came to world" in query:
-            speak(" I came to this world to help people", "Assistant")
-
-        elif 'is love' in query:
-            speak(" It is 7th sense that destroy all other senses", "Assistant")
-
-        elif "who are you" in query:
-            speak(" I am your virtual assistant created by STEP IT Team", "Assistant")
-
-        elif 'news' in query:
+    # System
+    elif "set brightness to" in query:
+        c = wmi.WMI(namespace='wmi')
+        words = query.split()
+        for word in words:
+            word = word.replace('%', '')
             try:
-                jsonObj = urlopen('http://newsapi.org/v2/top-headlines?'
-                                   'country=us&'
-                                   'apiKey=c157fa081666455f9ff4102af7bb93cc')
-                data = json.load(jsonObj)
-                i = 1
-
-                speak(" Here are some top news from the times of USA", "Assistant")
-                print('''=============== TIMES OF USA ============''' + '\n')
-
-                for item in data['articles']:
-                    print(str(i) + '. ' + item['title'] + '\n')
-                    print(item['description'] + '\n')
-                    speak(" " + str(i) + '. ' + item['title'] + '\n', "Assistant")
-                    i += 1
+                word = int(word)
+                methods = c.WmiMonitorBrightnessMethods()[0]
+                methods.WmiSetBrightness(word, 0)
+                speak(f" Brightness was set to {word} percent", "Assistant")
             except Exception as e:
+                pass
 
-                print(str(e))
+    elif "increase brightness" in query:
+        c = wmi.WMI(namespace='wmi')
+        current = c.WmiMonitorBrightness()[0]
+        brightness = current.CurrentBrightness + 10
+        if brightness < 100:
+            methods = c.WmiMonitorBrightnessMethods()[0]
+            methods.WmiSetBrightness(brightness, 0)
+            speak(f" Brightness was increased, current brightness is {brightness}", "Assistant")
+        else:
+            speak(" Brightness is maximum", "Assistant")
 
-        elif 'lock window' in query:
-            speak(" Locking the device", "Assistant")
-            ctypes.windll.user32.LockWorkStation()
+    elif "decrease brightness" in query:
+        c = wmi.WMI(namespace='wmi')
+        current = c.WmiMonitorBrightness()[0]
+        brightness = current.CurrentBrightness - 10
+        if brightness > 5:
+            methods = c.WmiMonitorBrightnessMethods()[0]
+            methods.WmiSetBrightness(brightness, 0)
+            speak(f" Brightness was decreased, current brightness is {brightness}", "Assistant")
+        else:
+            speak(" Brightness is minimum", "Assistant")
 
-        elif 'shutdown system' in query:
-            speak(" Hold On a Sec ! Your system is on its way to shut down", "Assistant")
-            subprocess.call('shutdown / p /f')
+    elif "unmute" in query:
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+            IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+        volume.SetMute(0, None);
+        speak(" Volume is unmuted", "Assistant")
 
-        elif 'empty recycle bin' in query:
-            winshell.recycle_bin().empty(confirm=False, show_progress=False, sound=True)
-            speak(" Recycle Bin Recycled", "Assistant")
+    elif "mute" in query:
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+            IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+        volume.SetMute(1, None);
+        speak(" Volume is muted", "Assistant")
 
-        #Работать должно только в режиме безостановочной работы
-        elif "don't listen" in query or "stop listening" in query:
-            speak(" For how much time you want to stop me from listening commands", "Assistant")
-            a = takeCommand()     
-            if "seconds" in a:
-                a = a.split()
-                for word in a:
-                    try:
-                        number = int(word)
-                        print("test")
-                    except:
-                        pass     
-            elif "minutes" in a:
-                a = a.split()
-                for word in a:
-                    try:
-                        number = int(word)
-                        number = number * 60
-                    except:
-                        pass             
-            elif "hours" in a:
-                a = a.split()
-                for word in a:
-                    try:
-                        number = int(word)
-                        number = number * 3600
-                    except:
-                        pass             
-            elif "days" in a:
-                a = a.split()
-                for word in a:
-                    try:
-                        number = int(word)
-                        number = number * 86400
-                    except:
-                        pass     
-            speak(f" I will stop listening for {number} seconds", "Assistant")
-            time.sleep(number)
+    elif "set volume to" in query:
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+            IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+        words = query.split()
+        for word in words:
+            word = word.replace('%', '')
+            try:
+                needWin = int(word)
+                needDb = 25.05889 + (-65.31229 - 25.05889) / (1 + math.pow((needWin / 24.37377), (0.6767844)))
+                volume.SetMasterVolumeLevel(needDb, None)
+                speak(f" Current volume was set to {needWin}", "Assistant")
+            except Exception as e:
+                pass
 
-        elif "show on map" in query or "where is" in query:
-            query = query.replace("show on map", "")
-            query = query.replace("where is", "")
+    elif "increase volume" in query:
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+            IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+        currentDb = volume.GetMasterVolumeLevel()
+        currentWin = 24.3738 * math.pow((-(90.3712 / (currentDb - 25.0589)) - 1), 1.477575428748062)
+        needWin = currentWin + 10
+        needDb = 25.05889 + (-65.31229 - 25.05889) / (1 + math.pow((needWin / 24.37377), (0.6767844)))
+        volume.SetMasterVolumeLevel(needDb, None)
+        needWin = math.trunc(needWin)
+        speak(f" Current volume is {needWin}", "Assistant")
 
-            location = query
-            speak(" User asked to Locate", "Assistant")
-            speak(" " + location, "Assistant")
-            webbrowser.get('chrome').open("https://www.google.nl/maps/place/" + location + "")
+    elif "decrease volume" in query:
+        devices = AudioUtilities.GetSpeakers()
+        interface = devices.Activate(
+            IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+        volume = cast(interface, POINTER(IAudioEndpointVolume))
+        currentDb = volume.GetMasterVolumeLevel()
+        currentWin = 24.3738 * math.pow((-(90.3712 / (currentDb - 25.0589)) - 1), 1.477575428748062)
+        needWin = currentWin - 10
+        needDb = 25.05889 + (-65.31229 - 25.05889) / (1 + math.pow((needWin / 24.37377), (0.6767844)))
+        volume.SetMasterVolumeLevel(needDb, None)
+        needWin = math.trunc(needWin)
+        speak(f" Current volume is {needWin}", "Assistant")
 
-        elif "restart" in query:
-            subprocess.call(["shutdown", "/r"])
+    elif 'the time' in query or 'time' in query:
+        now = datetime.datetime.now()
+        strTime = now.strftime("%H:%M:%S")
+        speak(f" Sir, the time is {strTime}", "Assistant")
 
-        elif "hibernate" in query or "sleep" in query:
-            speak(" Hibernating", "Assistant")
-            subprocess.call("shutdown / h")
+    elif 'date is it' in query or 'date' in query:
+        now = datetime.datetime.now()
+        strTime = now.strftime("%d %B, %Y")
+        speak(f" Sir, the date is {strTime}", "Assistant")
 
-        elif "log off" in query or "sign out" in query:
-            speak(" Make sure all the application are closed before sign-out", "Assistant")
-            time.sleep(5)
-            subprocess.call(["shutdown", "/l"])
+    # хорошая идея с открытием сторонних приложений
+    # elif 'open opera' in query:
+    #     codePath = r"C:\\Users\\...\\AppData\\Local\\Programs\\Opera\\launcher.exe"
+    #     os.startfile(codePath)
 
-        elif "write a note" in query:
-            speak(" What should i write, sir", "Assistant")
-            note = takeCommand()
-            file = open('jarvis.txt', 'w')
-            speak(" Sir, Should i include date and time", "Assistant")
-            snfm = takeCommand()
-            if 'yes' in snfm or 'sure' in snfm:
-                now = datetime.datetime.now()
-                strTime = now.strftime("%H:%M:%S")
-                file.write(strTime)
-                file.write(" :- ")
-                file.write(note)
-            else:
-                file.write(note)
+    elif "change my name to" in query:
+        query = query.replace("change my name to", "")
+        uname = query
 
-        elif "show note" in query:
-            speak(" Showing Notes", "Assistant")
-            file = open("jarvis.txt", "r")
-            note = file.read()
-            print(note)
-            speak(" " + note, "Assistant")
+    elif "change name" in query:
+        speak(" What would you like to call me, Sir ", "Assistant")
+        assname = takeCommand()
+        addText(assname, "User")
+        speak(" Thanks for naming me", "Assistant")
 
-        elif "weather" in query:
-            # Google Open weather website
-            # to get API of Open weather
-            api_key = "44e4a0d8152c6a9538668064c5c591dc"
-            base_url = "http://api.openweathermap.org/data/2.5/weather?"
-            speak(" City name ", "Assistant")
-            print("City name : ")
-            city_name = takeCommand()
-            complete_url = base_url + "appid=" + api_key + "&q=" + city_name + "&units=metric"
-            print(complete_url)
-            response = requests.get(complete_url)
-            x = response.json()
+    elif "what's your name" in query or "What is your name" in query:
+        speak(" My friends call me", "Assistant")
+        speak(" " + assname, "Assistant")
+        print("My friends call me", assname)
 
-            if x["cod"] != "404":
-                y = x["main"]
-                current_temperature = y["temp"]
-                current_pressure = y["pressure"]
-                current_humidiy = y["humidity"]
-                z = x["weather"]
-                weather_description = z[0]["description"]
-                print(" Temperature (in Celsius unit) = " + str(
-                    current_temperature) + "\n atmospheric pressure (in hPa unit) =" + str(
-                    current_pressure) + "\n humidity (in percentage) = " + str(
-                    current_humidiy) + "\n description = " + str(weather_description))
-                speak(f" Current temperature is: {current_temperature} degree Celsius", "Assistant")
-                #speak("", "Assistant")
+    elif 'exit' in query:
+        speak(" Thanks for giving me your time", "Assistant")
+        exit()
 
-            else:
-                speak(" City Not Found ", "Assistant")
+    elif 'joke' in query:
+        speak(" " + pyjokes.get_joke(), "Assistant")
 
-        elif "wikipedia" in query:
-            url = "wikipedia.com"
-            webbrowser.get('chrome').open(url)
+    elif 'search' in query or 'play' in query:
+        query = query.replace("search", "")
+        query = query.replace("play", "")
+        webbrowser.get('chrome').open(query)
+        webbrowser.open(f'https://www.google.com/search?q={query}')
 
-        elif "what" in query or "who" in query or "when" in query or "where" in query:
-            app_id = "AQ36PG-QEWLVH4YKE"
-            client = wolframalpha.Client(app_id)
-            res = client.query(query)
+    elif "who i am" in query:
+        speak(" If you talk then definitely your human.", "Assistant")
 
-            if res['@success'] == 'false':
-                speak(" Question cannot be resolved", "Assistant")
-            else:
-                result = ''
-                pod0 = res['pod'][0]
-                pod1 = res['pod'][1]
-                if (('definition' in pod1['@title'].lower()) or ('result' in  pod1['@title'].lower()) or (pod1.get('@primary','false') == 'true')):
-                    result = resolveListOrDict(pod1['subpod'])
-                    speak(" " + result, "Assistant")
-                else:
-                    answer = Toplevel()
-                    answer.title("display an image")
-                    w = 520
-                    h = 320
-                    x = 80
-                    y = 100
-                    answer.geometry("%dx%d+%d+%d" % (w, h, x, y))
-                    image_url = pod1["subpod"]["img"]["@src"]
-                    image_byt = urlopen(image_url).read()
-                    image_b64 = base64.encodestring(image_byt)
-                    photo = PhotoImage(data=image_b64)
-                    cv = Canvas(master=answer, bg='white')
-                    cv.pack(side='top', fill='both', expand='yes')
-                    cv.create_image(10, 10, image=photo, anchor='nw')
-                    answer.mainloop()
+    elif "why you came to world" in query:
+        speak(" I came to this world to help people", "Assistant")
 
-        elif "pick a card" in query:
-            card_points =['A','K','Q','J','2','3','4','5','6','7','8','9','10']
-            card_signs =['Heart','CLUB','DIAMOND','SPADE']
-            random_point = random.choice(card_points)
-            random_sign = random.choice(card_signs)
-            random_card = f"{random_point} of {random_sign}"
-            
-            speak(" " + random_card, "Assistant")
-        
-        elif "roll the dice" in query or "roll a dice" in query:
-            speak(" One second", "Assistant")
-            playsound("sounds/Dice.mp3")
-            speak(" " + str(random.randint(1,6)), "Assistant")
+    elif 'is love' in query:
+        speak(" It is 7th sense that destroy all other senses", "Assistant")
 
-        elif "toss a coin" in query or "toss the coin" in query:
-            flip = random.randint(0, 1)
-            if (flip == 0):
-                  speak(" Heads", "Assistant")
-            else:
-                  speak(" Tails", "Assistant")
+    elif "who are you" in query:
+        speak(" I am your virtual assistant created by STEP IT Team", "Assistant")
 
-        elif "pick a number" in query:
-            numbersRange = []
-            words = query.split()
-            for word in words:
+    elif 'news' in query:
+        try:
+            jsonObj = urlopen('http://newsapi.org/v2/top-headlines?'
+                              'country=us&'
+                              'apiKey=c157fa081666455f9ff4102af7bb93cc')
+            data = json.load(jsonObj)
+            i = 1
+
+            speak(" Here are some top news from the times of USA", "Assistant")
+            print('''=============== TIMES OF USA ============''' + '\n')
+
+            for item in data['articles']:
+                print(str(i) + '. ' + item['title'] + '\n')
+                print(item['description'] + '\n')
+                speak(" " + str(i) + '. ' + item['title'] + '\n', "Assistant")
+                i += 1
+        except Exception as e:
+
+            print(str(e))
+
+    elif 'lock window' in query:
+        speak(" Locking the device", "Assistant")
+        ctypes.windll.user32.LockWorkStation()
+
+    elif 'shutdown system' in query:
+        speak(" Hold On a Sec ! Your system is on its way to shut down", "Assistant")
+        subprocess.call('shutdown / p /f')
+
+    elif 'empty recycle bin' in query:
+        winshell.recycle_bin().empty(confirm=False, show_progress=False, sound=True)
+        speak(" Recycle Bin Recycled", "Assistant")
+
+    # Работать должно только в режиме безостановочной работы
+    elif "don't listen" in query or "stop listening" in query:
+        speak(" For how much time you want to stop me from listening commands", "Assistant")
+        a = takeCommand()
+        if "seconds" in a:
+            a = a.split()
+            for word in a:
                 try:
                     number = int(word)
-                    numbersRange.append(number)
+                    print("test")
                 except:
-                    pass                  
-            speak(" " + str(random.randint(numbersRange[0], numbersRange[1])), "Assistant")
+                    pass
+        elif "minutes" in a:
+            a = a.split()
+            for word in a:
+                try:
+                    number = int(word)
+                    number = number * 60
+                except:
+                    pass
+        elif "hours" in a:
+            a = a.split()
+            for word in a:
+                try:
+                    number = int(word)
+                    number = number * 3600
+                except:
+                    pass
+        elif "days" in a:
+            a = a.split()
+            for word in a:
+                try:
+                    number = int(word)
+                    number = number * 86400
+                except:
+                    pass
+        speak(f" I will stop listening for {number} seconds", "Assistant")
+        time.sleep(number)
 
-        elif "open calendar" in query:
-            service = get_calendar_service()
-            # Call the Calendar API
-            now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
-            speak(" Getting upcoming events for today", "Assistant")
-            events_result = service.events().list(
-                calendarId='primary', timeMin=now,
-                maxResults=10, singleEvents=True,
-                orderBy='startTime').execute()
-            events = events_result.get('items', [])
-            numberOfTodayEvents = 0
+    elif "show on map" in query or "where is" in query:
+        query = query.replace("show on map", "")
+        query = query.replace("where is", "")
 
-            if not events:
-                speak(" No upcoming events found.", "Assistant")
-            for event in events:
-                start = event['start'].get('dateTime', event['start'].get('date'))
-                eventDate = start.split("T")
-                today = now.split("T")
-                if eventDate[0] == today[0]:
-                    numberOfTodayEvents = numberOfTodayEvents + 1
-                    eventTime = eventDate[1].split(":")
-                    speak(f" At {eventTime[0]} :{eventTime[1]} you have {event['summary']}", "Assistant")
-                    #print(eventTime[0] + ":" +  eventTime[1] + "    " +  event['summary'])
-                    #print(event)
-            if numberOfTodayEvents == 0:
-                speak(" No upcoming events for today found.", "Assistant")
+        location = query
+        speak(" User asked to Locate", "Assistant")
+        speak(" " + location, "Assistant")
+        webbrowser.get('chrome').open("https://www.google.nl/maps/place/" + location + "")
+
+    elif "restart" in query:
+        subprocess.call(["shutdown", "/r"])
+
+    elif "hibernate" in query or "sleep" in query:
+        speak(" Hibernating", "Assistant")
+        subprocess.call("shutdown / h")
+
+    elif "log off" in query or "sign out" in query:
+        speak(" Make sure all the application are closed before sign-out", "Assistant")
+        time.sleep(5)
+        subprocess.call(["shutdown", "/l"])
+
+    elif "write a note" in query:
+        speak(" What should i write, sir", "Assistant")
+        note = takeCommand()
+        file = open('jarvis.txt', 'w')
+        speak(" Sir, Should i include date and time", "Assistant")
+        snfm = takeCommand()
+        if 'yes' in snfm or 'sure' in snfm:
+            now = datetime.datetime.now()
+            strTime = now.strftime("%H:%M:%S")
+            file.write(strTime)
+            file.write(" :- ")
+            file.write(note)
+        else:
+            file.write(note)
+
+    elif "show note" in query:
+        speak(" Showing Notes", "Assistant")
+        file = open("jarvis.txt", "r")
+        note = file.read()
+        print(note)
+        speak(" " + note, "Assistant")
+
+    elif "weather" in query:
+        # Google Open weather website
+        # to get API of Open weather
+        api_key = "44e4a0d8152c6a9538668064c5c591dc"
+        base_url = "http://api.openweathermap.org/data/2.5/weather?"
+        speak(" City name ", "Assistant")
+        print("City name : ")
+        city_name = takeCommand()
+        complete_url = base_url + "appid=" + api_key + "&q=" + city_name + "&units=metric"
+        print(complete_url)
+        response = requests.get(complete_url)
+        x = response.json()
+
+        if x["cod"] != "404":
+            y = x["main"]
+            current_temperature = y["temp"]
+            current_pressure = y["pressure"]
+            current_humidiy = y["humidity"]
+            z = x["weather"]
+            weather_description = z[0]["description"]
+            print(" Temperature (in Celsius unit) = " + str(
+                current_temperature) + "\n atmospheric pressure (in hPa unit) =" + str(
+                current_pressure) + "\n humidity (in percentage) = " + str(
+                current_humidiy) + "\n description = " + str(weather_description))
+            speak(f" Current temperature is: {current_temperature} degree Celsius", "Assistant")
+            # speak("", "Assistant")
+
+        else:
+            speak(" City Not Found ", "Assistant")
+
+    elif "wikipedia" in query:
+        url = "wikipedia.com"
+        webbrowser.get('chrome').open(url)
+
+    elif "what" in query or "who" in query or "when" in query or "where" in query:
+        app_id = "AQ36PG-QEWLVH4YKE"
+        client = wolframalpha.Client(app_id)
+        res = client.query(query)
+
+        if res['@success'] == 'false':
+            speak(" Question cannot be resolved", "Assistant")
+        else:
+            result = ''
+            pod0 = res['pod'][0]
+            pod1 = res['pod'][1]
+            if (('definition' in pod1['@title'].lower()) or ('result' in pod1['@title'].lower()) or (
+                    pod1.get('@primary', 'false') == 'true')):
+                result = resolveListOrDict(pod1['subpod'])
+                speak(" " + result, "Assistant")
             else:
-                speak(f" Total number of events for today: {numberOfTodayEvents}", "Assistant")
+                answer = Toplevel()
+                answer.title("display an image")
+                w = 520
+                h = 320
+                x = 80
+                y = 100
+                answer.geometry("%dx%d+%d+%d" % (w, h, x, y))
+                image_url = pod1["subpod"]["img"]["@src"]
+                image_byt = urlopen(image_url).read()
+                image_b64 = base64.encodestring(image_byt)
+                photo = PhotoImage(data=image_b64)
+                cv = Canvas(master=answer, bg='white')
+                cv.pack(side='top', fill='both', expand='yes')
+                cv.create_image(10, 10, image=photo, anchor='nw')
+                answer.mainloop()
 
-        # most asked question from google Assistant
-        elif "good morning" in query:
-            speak(" A warm" + query, "Assistant")
-            speak(" How are you Mister", "Assistant")
-        elif "will you be my girlfriend" in query or "will you be my boyfriend" in query:
-            speak(" I'm not sure about, may be you should give me some time", "Assistant")
-        elif "how are you" in query:
-            speak(" I'm fine, glad you me that", "Assistant")
-        elif "i love you" in query:
-            speak(" It's hard to understand", "Assistant")
-        elif 'how are you' in query:
-            speak(" I am fine, Thank you", "Assistant")
-            speak(" How are you, Sir", "Assistant")
-        elif 'fine' in query or "good" in query:
-            speak(" It's good to know that your fine", "Assistant")
-        elif 'convert currency' in query:
-            speak(" Tell me first currency", "Assistant")
-            first_currency = takeCommand()
-            addText(first_currency, "User")
+    elif "pick a card" in query:
+        card_points = ['A', 'K', 'Q', 'J', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        card_signs = ['Heart', 'CLUB', 'DIAMOND', 'SPADE']
+        random_point = random.choice(card_points)
+        random_sign = random.choice(card_signs)
+        random_card = f"{random_point} of {random_sign}"
 
-            speak(" Tell me second currency", "Assistant")
-            second_currency = takeCommand()
-            addText(second_currency, "User")
+        speak(" " + random_card, "Assistant")
 
-            speak(" Tell me count", "Assistant")
-            value = takeCommand()
-            addText(value, "User")
-            value = int(value)
-                
+    elif "roll the dice" in query or "roll a dice" in query:
+        speak(" One second", "Assistant")
+        playsound("sounds/Dice.mp3")
+        speak(" " + str(random.randint(1, 6)), "Assistant")
+
+    elif "toss a coin" in query or "toss the coin" in query:
+        flip = random.randint(0, 1)
+        if flip == 0:
+            speak(" Heads", "Assistant")
+        else:
+            speak(" Tails", "Assistant")
+
+    elif "pick a number" in query:
+        numbersRange = []
+        words = query.split()
+        for word in words:
             try:
-                url = "https://currency28.p.rapidapi.com/convert-currency"
-                querystring = {"amount": value, "to": second_currency, "from": first_currency}
-                headers = {
-                        'x-rapidapi-host': "currency28.p.rapidapi.com",
-                        'x-rapidapi-key': "afce3bc89fmsh1ca02613744b32ap11d006jsnda1143ee3262"
-                    }
-                response = requests.request("GET", url, headers=headers, params=querystring)
+                number = int(word)
+                numbersRange.append(number)
+            except:
+                pass
+        speak(" " + str(random.randint(numbersRange[0], numbersRange[1])), "Assistant")
 
-                data = json.loads(response.text)
-                answer = data["result"]["value"]
-                answer = float("{0:.1f}".format(answer))
-                speak(f" {value} {first_currency} is {answer} {second_currency}", "Assistant")
+    elif "open calendar" in query:
+        service = get_calendar_service()
+        # Call the Calendar API
+        now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC time
+        speak(" Getting upcoming events for today", "Assistant")
+        events_result = service.events().list(
+            calendarId='primary', timeMin=now,
+            maxResults=10, singleEvents=True,
+            orderBy='startTime').execute()
+        events = events_result.get('items', [])
+        numberOfTodayEvents = 0
 
-            except Exception as e:
-                print(str(e))
-                speak(" Sorry, i can't do that", "Assistant")
+        if not events:
+            speak(" No upcoming events found.", "Assistant")
+        for event in events:
+            start = event['start'].get('dateTime', event['start'].get('date'))
+            eventDate = start.split("T")
+            today = now.split("T")
+            if eventDate[0] == today[0]:
+                numberOfTodayEvents = numberOfTodayEvents + 1
+                eventTime = eventDate[1].split(":")
+                speak(f" At {eventTime[0]} :{eventTime[1]} you have {event['summary']}", "Assistant")
+                # print(eventTime[0] + ":" +  eventTime[1] + "    " +  event['summary'])
+                # print(event)
+        if numberOfTodayEvents == 0:
+            speak(" No upcoming events for today found.", "Assistant")
+        else:
+            speak(f" Total number of events for today: {numberOfTodayEvents}", "Assistant")
+
+    # most asked question from google Assistant
+    elif "good morning" in query:
+        speak(" A warm" + query, "Assistant")
+        speak(" How are you Mister", "Assistant")
+
+    elif "will you be my girlfriend" in query or "will you be my boyfriend" in query:
+        speak(" I'm not sure about, may be you should give me some time", "Assistant")
+
+    elif "how are you" in query:
+        speak(" I'm fine, glad you me that", "Assistant")
+
+    elif "i love you" in query:
+        speak(" It's hard to understand", "Assistant")
+
+    elif 'how are you' in query:
+        speak(" I am fine, Thank you", "Assistant")
+        speak(" How are you, Sir", "Assistant")
+
+    elif 'fine' in query or "good" in query:
+        speak(" It's good to know that your fine", "Assistant")
+
+    elif 'convert currency' in query:
+        speak(" Tell me first currency", "Assistant")
+        first_currency = takeCommand()
+        addText(first_currency, "User")
+
+        speak(" Tell me second currency", "Assistant")
+        second_currency = takeCommand()
+        addText(second_currency, "User")
+
+        speak(" Tell me count", "Assistant")
+        value = takeCommand()
+        addText(value, "User")
+        value = int(value)
+
+        try:
+            url = "https://currency28.p.rapidapi.com/convert-currency"
+            querystring = {"amount": value, "to": second_currency, "from": first_currency}
+            headers = {
+                'x-rapidapi-host': "currency28.p.rapidapi.com",
+                'x-rapidapi-key': "afce3bc89fmsh1ca02613744b32ap11d006jsnda1143ee3262"
+            }
+            response = requests.request("GET", url, headers=headers, params=querystring)
+
+            data = json.loads(response.text)
+            answer = data["result"]["value"]
+            answer = float("{0:.1f}".format(answer))
+            speak(f" {value} {first_currency} is {answer} {second_currency}", "Assistant")
+
+        except Exception as e:
+            print(str(e))
+            speak(" Sorry, i can't do that", "Assistant")
+
+    elif 'convert units' in query:
+        speak(" Tell me first unit", "Assistant")
+        first_unit = takeCommand()
+        addText(first_unit, "User")
+
+        speak(" Tell me second unit", "Assistant")
+        second_unit = takeCommand()
+        addText(second_unit, "User")
+
+        speak(" Tell me count", "Assistant")
+        value = takeCommand()
+        addText(value, "User")
+        value = int(value)
+
+        try:
+            url = "https://community-neutrino-currency-conversion.p.rapidapi.com/convert"
+
+            payload = f"from-type={first_unit}&to-type={second_unit}&from-value={value}"
+            headers = {
+                'x-rapidapi-host': "community-neutrino-currency-conversion.p.rapidapi.com",
+                'x-rapidapi-key': "723e3a6c9cmshc33c3107695169dp1fecb9jsn35e893aa67d4",
+                'content-type': "application/x-www-form-urlencoded"
+            }
+
+            response = requests.request("POST", url, data=payload, headers=headers)
+            data = json.loads(response.text)
+            answer = data["result"]
+            speak(f" {value} {first_unit} is {answer} {second_unit}", "Assistant")
+        except Exception as e:
+            print(str(e))
+            speak(" Sorry, i can't do that", "Assistant")
+
+    elif "search film" in query or "film" in query or "movie" in query:
+        speak(" What movie, do you want to search ?", "Assistant")
+        search = takeCommand()
+
+        try:
+            url = f"https://imdb-internet-movie-database-unofficial.p.rapidapi.com/search/{search}"
+
+            headers = {
+                'x-rapidapi-host': "imdb-internet-movie-database-unofficial.p.rapidapi.com",
+                'x-rapidapi-key': "723e3a6c9cmshc33c3107695169dp1fecb9jsn35e893aa67d4"
+            }
+
+            response = requests.request("GET", url, headers=headers)
+            data = json.loads(response.text)
+
+            panel = Label(root, image=img)
+            panel.pack()
+            for i in range(len(data)):
+                speak(" There is movies, i founded", "Assistant")
+                speak(" " + data["titles"][i]["title"], "Assistant")
+                img_response = requests.get(data["titles"][i]["image"])
+
+                img = ImageTk.PhotoImage(Image.open(BytesIO(img_response.content)))
+                add_image()
+        except Exception as e:
+            print(str(e))
+            speak(" Sorry, i can't do that", "Assistant")
 
 
-        elif 'convert units' in query:
-            speak(" Tell me first unit", "Assistant")
-            first_unit= takeCommand()
-            addText(first_unit, "User")
-
-            speak(" Tell me second unit", "Assistant")
-            second_unit = takeCommand()
-            addText(second_unit, "User")
-
-            speak(" Tell me count", "Assistant")
-            value = takeCommand()
-            addText(value, "User")
-            value = int(value)
-                
-            try:
-                url = "https://community-neutrino-currency-conversion.p.rapidapi.com/convert"
-
-                payload = f"from-type={first_unit}&to-type={second_unit}&from-value={value}"
-                headers = {
-                        'x-rapidapi-host': "community-neutrino-currency-conversion.p.rapidapi.com",
-                        'x-rapidapi-key': "723e3a6c9cmshc33c3107695169dp1fecb9jsn35e893aa67d4",
-                        'content-type': "application/x-www-form-urlencoded"
-                    }
-
-                response = requests.request("POST", url, data=payload, headers=headers)
-                data = json.loads(response.text)
-                answer = data["result"]
-                speak(f" {value} {first_unit} is {answer} {second_unit}", "Assistant")
-            except Exception as e:
-                print(str(e))
-                speak(" Sorry, i can't do that", "Assistant")
-                
-        elif "search film" in query or "film" in query or "movie" in query:
-            speak(" What movie, do you want to search ?", "Assistant")
-            search = takeCommand()
-            
-            try:
-                url = f"https://imdb-internet-movie-database-unofficial.p.rapidapi.com/search/{search}"
-
-                headers = {
-                    'x-rapidapi-host': "imdb-internet-movie-database-unofficial.p.rapidapi.com",
-                    'x-rapidapi-key': "723e3a6c9cmshc33c3107695169dp1fecb9jsn35e893aa67d4"
-                }
-
-                response = requests.request("GET", url, headers=headers)
-                data = json.loads(response.text)
-                
-
-                panel = Label(root, image = img)
-                panel.pack()
-                for i in range(len(data)):
-                    speak(" There is movies, i founded", "Assistant")
-                    speak(" " + data["titles"][i]["title"], "Assistant")
-                    img_response = requests.get(data["titles"][i]["image"])
-    
-                    img = ImageTk.PhotoImage(Image.open(BytesIO(img_response.content)))
-                    add_image()
-            except Exception as e:
-                print(str(e))
-                speak(" Sorry, i can't do that", "Assistant")
-
-#speak_image = PhotoImage(file="img/mic.png")
-#button_speak = Button(command=turn, image=speak_image).pack()
+# speak_image = PhotoImage(file="img/mic.png")
+# button_speak = Button(command=turn, image=speak_image).pack()
 button_speak = Button(command=turn, text="Speak").pack()
 
 logText = Text(height=50, width=50)
@@ -737,9 +749,9 @@ logText.tag_configure("user", justify="right", foreground="red")
 logText.tag_configure("comp", justify="left", foreground="green")
 logText.pack()
 
-#wishMe()
-#usrname()
-#speak("How can i Help you, Sir", "Assistant")
+# wishMe()
+# usrname()
+# speak("How can i Help you, Sir", "Assistant")
 
 
 root.mainloop()
