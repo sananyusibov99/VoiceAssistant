@@ -39,6 +39,7 @@ from playsound import playsound
 import os
 import shutil
 import csv
+import inflect
 
 webbrowser.register('chrome',
                     None,
@@ -79,6 +80,18 @@ def addText(msg, side):
 
 def speak(msg, side):
     addText(msg, side)
+    print("Message: " + msg)
+    separatedMsg = msg.replace(':', ' ').replace(';', ' ').split()
+    print(separatedMsg)
+    for word in separatedMsg:
+        p = inflect.engine()
+        try:
+            print(int(word))
+            textValue = p.number_to_words(word)
+            msg = msg.replace(word, textValue)
+        except:
+            pass
+    print(msg)
     # Считывает все имеющиеся звуки
     with open('samples/table.csv', mode='r') as infile:
         reader = csv.reader(infile)
@@ -98,7 +111,7 @@ def speak(msg, side):
         f.close()
 
         # Вызывается синтез
-        os.system("synthesize.py")
+        os.system("python synthesize.py")
 
         # Подсчет сколько файлов уже синтезировано
         cwd = os.getcwd()
@@ -145,14 +158,14 @@ def wishMe():
     global assname
     hour = int(datetime.datetime.now().hour)
 
-    if hour >= 0 and hour < 12:
+    if 0 <= hour < 12:
         speak(" Good Morning Sir !", "Assistant")
-    elif hour >= 12 and hour < 18:
+    elif 12 <= hour < 18:
         speak(" Good Afternoon Sir !", "Assistant")
     else:
         speak(" Good Evening Sir !", "Assistant")
     speak(" I am your Assistant", "Assistant")
-    assname = (" i dont know my name yet")
+    assname = " i dont know my name yet"
     speak(assname, "Assistant")
 
 
@@ -207,7 +220,7 @@ def turn():
 
     # clear()
 
-    query = "open google"
+    query = "what time is it"
     # query = takeCommand().lower()
     addText(query, "User")
 
@@ -331,7 +344,7 @@ def turn():
 
     elif 'the time' in query or 'time' in query:
         now = datetime.datetime.now()
-        strTime = now.strftime("%H:%M:%S")
+        strTime = now.strftime("%H:%M")
         speak(f" Sir, the time is {strTime}", "Assistant")
 
     elif 'date is it' in query or 'date' in query:
@@ -677,7 +690,6 @@ def turn():
         except Exception as e:
             print(str(e))
             speak(" Sorry, i can't do that", "Assistant")
-
 
     elif 'convert units' in query:
         speak(" Tell me first unit", "Assistant")
