@@ -129,7 +129,11 @@ phrases = [" Good Morning Sir !", " Good Afternoon Sir !", " Good Evening Sir !"
            " I'm fine, glad you me that", " It's hard to understand", " I am fine, Thank you", " How are you, Sir",
            " It's good to know that your fine", " Tell me first currency", " Tell me second currency",
            " Tell me count", " Sorry, i can't do that", " Tell me first unit", " Tell me second unit", " Tell me count",
-           " What movie, do you want to search ?", " There is movies, i founded", ]
+           " What movie, do you want to search ?", " There is movies, i founded", " Brightness", " percent",
+           " Brightness was increased, current brightness is", " Brightness was decreased, current brightness is",
+           " Current volume was set to", " Current volume is", " Sir, the time is", " Sir, the date is",
+           " I will stop listening for", " seconds", " Current temperature is:", " degree Celsius",
+           " Total number of events for today:"]
 
 for item in phrases:
     synth(item)
