@@ -31,16 +31,16 @@ import win32com.client as wincl
 from urllib.request import urlopen
 import base64
 import io
-from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage
+from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage, END
 from PIL import Image, ImageTk
-from cal_setup import get_calendar_service
+# from cal_setup import get_calendar_service
 import pathlib
 from playsound import playsound
 import os
 import shutil
 import csv
 import inflect
-
+from io import BytesIO
 webbrowser.register('chrome',
                     None,
                     webbrowser.BackgroundBrowser("C://Program Files (x86)//Google//Chrome//Application//chrome.exe"))
@@ -54,10 +54,17 @@ root.title("Voice Assistant")
 root.minsize(500, 500)
 global assname
 assname = "i don't know my name yet"
+img = []
+film_name = []
 
-
-def add_image():
-    logText.image_create(root.END, image=img)
+def addImage():
+    # for item in img:
+    #     logText.image_create(END, image=item)
+    #     logText.insert(END, '\n')
+    #
+    for i in range(len(img)):
+        logText.image_create(END, image=img[i])
+        speak(film_name[i], "Assistant")
 
 
 def deleteText(msg, side):
@@ -78,73 +85,73 @@ def addText(msg, side):
     root.update()
 
 
-def speak(msg, side):
-    addText(msg, side)
-    print("Message: " + msg)
-    separatedMsg = msg.replace(':', ' ').replace(';', ' ').split()
-    print(separatedMsg)
-    for word in separatedMsg:
-        p = inflect.engine()
-        try:
-            print(int(word))
-            textValue = p.number_to_words(word)
-            msg = msg.replace(word, textValue)
-        except:
-            pass
-    print(msg)
-    # Считывает все имеющиеся звуки
-    with open('samples/table.csv', mode='r') as infile:
-        reader = csv.reader(infile)
-        mydict = {rows[0]: rows[1] for rows in reader}
-
-    # Если текст уже синтезирован то проигрывает его
-    if mydict.get(msg.lower()):
-        playsound(f"sounds/{mydict.get(msg.lower())}.wav")
-    # Если текст не существует синтезирует его
-    else:
-        # Добавляется в текстовый файл для последущей синтезации
-        f = open("harvard_sentences.txt", "a")
-        f.truncate(0)
-        f.write("http://www.cs.columbia.edu/~hgs/audio/harvard.html\n")
-        msg = msg.lower()
-        f.write(msg)
-        f.close()
-
-        # Вызывается синтез
-        os.system("python synthesize.py")
-
-        # Подсчет сколько файлов уже синтезировано
-        cwd = os.getcwd()
-        cwd = cwd + "\sounds"
-        os.chdir(cwd)
-        print(cwd)
-        count = 0
-        for path in pathlib.Path(".").iterdir():
-            if path.is_file():
-                count += 1
-        print(count)
-
-        # Перенос нового файла к уже сохраненным файлам
-        cwd = cwd.replace("\sounds", "")
-        original = f'{cwd}\samples\\1.wav'
-        target = f'{cwd}\sounds\\{count + 1}.wav'
-
-        shutil.move(original, target)
-
-        # Проигрывание нового файла
-        playsound(f"{count + 1}.wav")
-
-        # Добавление файла в таблицу для последущего использования
-        os.chdir(cwd)
-        with open('samples/table.csv', 'a+', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow([msg, count + 1])
-
-
 # def speak(msg, side):
 #     addText(msg, side)
-#     engine.say(msg)
-#     engine.runAndWait()
+#     print("Message: " + msg)
+#     separatedMsg = msg.replace(':', ' ').replace(';', ' ').split()
+#     print(separatedMsg)
+#     for word in separatedMsg:
+#         p = inflect.engine()
+#         try:
+#             print(int(word))
+#             textValue = p.number_to_words(word)
+#             msg = msg.replace(word, textValue)
+#         except:
+#             pass
+#     print(msg)
+#     # Считывает все имеющиеся звуки
+#     with open('samples/table.csv', mode='r') as infile:
+#         reader = csv.reader(infile)
+#         mydict = {rows[0]: rows[1] for rows in reader}
+#
+#     # Если текст уже синтезирован то проигрывает его
+#     if mydict.get(msg.lower()):
+#         playsound(f"sounds/{mydict.get(msg.lower())}.wav")
+#     # Если текст не существует синтезирует его
+#     else:
+#         # Добавляется в текстовый файл для последущей синтезации
+#         f = open("harvard_sentences.txt", "a")
+#         f.truncate(0)
+#         f.write("http://www.cs.columbia.edu/~hgs/audio/harvard.html\n")
+#         msg = msg.lower()
+#         f.write(msg)
+#         f.close()
+#
+#         # Вызывается синтез
+#         os.system("python synthesize.py")
+#
+#         # Подсчет сколько файлов уже синтезировано
+#         cwd = os.getcwd()
+#         cwd = cwd + "\sounds"
+#         os.chdir(cwd)
+#         print(cwd)
+#         count = 0
+#         for path in pathlib.Path(".").iterdir():
+#             if path.is_file():
+#                 count += 1
+#         print(count)
+#
+#         # Перенос нового файла к уже сохраненным файлам
+#         cwd = cwd.replace("\sounds", "")
+#         original = f'{cwd}\samples\\1.wav'
+#         target = f'{cwd}\sounds\\{count + 1}.wav'
+#
+#         shutil.move(original, target)
+#
+#         # Проигрывание нового файла
+#         playsound(f"{count + 1}.wav")
+#
+#         # Добавление файла в таблицу для последущего использования
+#         os.chdir(cwd)
+#         with open('samples/table.csv', 'a+', newline='') as file:
+#             writer = csv.writer(file)
+#             writer.writerow([msg, count + 1])
+
+
+def speak(msg, side):
+    addText(msg, side)
+    engine.say(msg)
+    engine.runAndWait()
 
 
 def resolveListOrDict(variable):
@@ -220,7 +227,7 @@ def turn():
 
     # clear()
 
-    query = "what time is it"
+    query = "film"
     # query = takeCommand().lower()
     addText(query, "User")
 
@@ -729,31 +736,31 @@ def turn():
 
         try:
             url = f"https://imdb-internet-movie-database-unofficial.p.rapidapi.com/search/{search}"
-
+            PhotoUrl = ""
             headers = {
                 'x-rapidapi-host': "imdb-internet-movie-database-unofficial.p.rapidapi.com",
                 'x-rapidapi-key': "723e3a6c9cmshc33c3107695169dp1fecb9jsn35e893aa67d4"
             }
 
             response = requests.request("GET", url, headers=headers)
+
             data = json.loads(response.text)
 
-            panel = Label(root, image=img)
-            panel.pack()
             for i in range(len(data)):
-                speak(" There is movies, i founded", "Assistant")
-                speak(" " + data["titles"][i]["title"], "Assistant")
+                print(data["titles"][i]["title"])
                 img_response = requests.get(data["titles"][i]["image"])
+                img_temp = Image.open(BytesIO(img_response.content))
+                img_temp = img_temp.resize((90, 120), Image.ANTIALIAS)
+                img.append(ImageTk.PhotoImage(img_temp))
+                film_name.append(data["titles"][i]["title"])
+            addImage()
 
-                img = ImageTk.PhotoImage(Image.open(BytesIO(img_response.content)))
-                add_image()
         except Exception as e:
             print(str(e))
-            speak(" Sorry, i can't do that", "Assistant")
-
 
 # speak_image = PhotoImage(file="img/mic.png")
 # button_speak = Button(command=turn, image=speak_image).pack()
+
 button_speak = Button(command=turn, text="Speak").pack()
 
 logText = Text(height=50, width=50)
