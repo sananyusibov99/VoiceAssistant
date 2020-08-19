@@ -133,7 +133,7 @@ phrases = [" Good Morning Sir !", " Good Afternoon Sir !", " Good Evening Sir !"
            " Brightness was increased, current brightness is", " Brightness was decreased, current brightness is",
            " Current volume was set to", " Current volume is", " Sir, the time is", " Sir, the date is",
            " I will stop listening for", " seconds", " Current temperature is:", " degree Celsius",
-           " Total number of events for today:"]
+           " Total number of events for today:", " Brightness was set to"]
 
 for item in phrases:
     synth(item)

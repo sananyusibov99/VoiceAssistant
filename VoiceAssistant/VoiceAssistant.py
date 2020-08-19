@@ -293,7 +293,7 @@ def turn():
 
     # clear()
 
-    query = "the time"
+    query = "set brightness to 100"
     # query = takeCommand().lower()
     addText(query, "User")
 
@@ -331,7 +331,7 @@ def turn():
                 word = int(word)
                 methods = c.WmiMonitorBrightnessMethods()[0]
                 methods.WmiSetBrightness(word, 0)
-                speak([" Brightness", f" {word}", " percent"], "Assistant")
+                speak([" Brightness was set to", f" {word}", " percent"], "Assistant")
                 #speak(f" Brightness was set to {word} percent", "Assistant")
             except Exception as e:
                 pass
