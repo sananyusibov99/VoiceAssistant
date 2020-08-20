@@ -119,7 +119,7 @@ def speak(msg, side):
             f.close()
 
             # Вызывается синтез
-            os.system("python synthesize.py")
+            os.system("synthesize.py")
 
             # Подсчет сколько файлов уже синтезировано
             cwd = os.getcwd()
@@ -293,7 +293,7 @@ def turn():
 
     # clear()
 
-    query = "set brightness to 100"
+    query = "open youtube"
     # query = takeCommand().lower()
     addText(query, "User")
 
