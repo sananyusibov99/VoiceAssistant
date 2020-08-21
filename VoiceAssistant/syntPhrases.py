@@ -40,7 +40,7 @@ import os
 import shutil
 import csv
 import inflect
-
+import string
 
 def synth(msg):
     print("Message: " + msg)
@@ -138,4 +138,12 @@ phrases = [" Good Morning Sir !", " Good Afternoon Sir !", " Good Evening Sir !"
            " My choice was Paper", " My choice was Scissors", " Draw", " You won", " I won", " Wrong choice"]
 
 for item in phrases:
+    synth(item)
+
+alphabet = list(string.ascii_lowercase)
+for item in alphabet:
+    synth(item)
+
+for item in alphabet:
+    item = " " + item
     synth(item)

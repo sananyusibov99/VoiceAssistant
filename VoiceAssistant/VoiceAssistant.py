@@ -119,7 +119,7 @@ def speak(msg, side):
             f.close()
 
             # Вызывается синтез
-            os.system("synthesize.py")
+            os.system("python synthesize.py")
 
             # Подсчет сколько файлов уже синтезировано
             cwd = os.getcwd()
@@ -290,10 +290,9 @@ def turn():
     global uname
     global assname
     # clear = lambda: os.system('cls')
-
     # clear()
 
-    query = "open youtube"
+    query = "spell the word consider"
     # query = takeCommand().lower()
     addText(query, "User")
 
@@ -627,38 +626,6 @@ def turn():
         url = "wikipedia.com"
         webbrowser.get('chrome').open(url)
 
-    elif "what" in query or "who" in query or "when" in query or "where" in query:
-        app_id = "AQ36PG-QEWLVH4YKE"
-        client = wolframalpha.Client(app_id)
-        res = client.query(query)
-
-        if res['@success'] == 'false':
-            speak(" Question cannot be resolved", "Assistant")
-        else:
-            result = ''
-            pod0 = res['pod'][0]
-            pod1 = res['pod'][1]
-            if (('definition' in pod1['@title'].lower()) or ('result' in pod1['@title'].lower()) or (
-                    pod1.get('@primary', 'false') == 'true')):
-                result = resolveListOrDict(pod1['subpod'])
-                speak(" " + result, "Assistant")
-            else:
-                answer = Toplevel()
-                answer.title("display an image")
-                w = 520
-                h = 320
-                x = 80
-                y = 100
-                answer.geometry("%dx%d+%d+%d" % (w, h, x, y))
-                image_url = pod1["subpod"]["img"]["@src"]
-                image_byt = urlopen(image_url).read()
-                image_b64 = base64.encodestring(image_byt)
-                photo = PhotoImage(data=image_b64)
-                cv = Canvas(master=answer, bg='white')
-                cv.pack(side='top', fill='both', expand='yes')
-                cv.create_image(10, 10, image=photo, anchor='nw')
-                answer.mainloop()
-
     elif "pick a card" in query:
         card_points = ['A', 'K', 'Q', 'J', '2', '3', '4', '5', '6', '7', '8', '9', '10']
         card_signs = ['Heart', 'CLUB', 'DIAMOND', 'SPADE']
@@ -773,6 +740,14 @@ def turn():
     elif 'fine' in query or "good" in query:
         speak(" It's good to know that your fine", "Assistant")
 
+    elif "spell" in query:
+        query = query.replace("spell", "")
+        query = query.replace("the", "")
+        query = query.replace("word", "")
+        query = query.replace(" ", "")
+        query = list(query)
+        speak(query, "Assistant")
+
     elif 'convert currency' in query:
         speak(" Tell me first currency", "Assistant")
         first_currency = takeCommand()
@@ -836,6 +811,38 @@ def turn():
         except Exception as e:
             print(str(e))
             speak(" Sorry, i can't do that", "Assistant")
+
+    elif "what" in query or "who" in query or "when" in query or "where" in query or "how" in query:
+        app_id = "AQ36PG-QEWLVH4YKE"
+        client = wolframalpha.Client(app_id)
+        res = client.query(query)
+
+        if res['@success'] == 'false':
+            speak(" Question cannot be resolved", "Assistant")
+        else:
+            result = ''
+            pod0 = res['pod'][0]
+            pod1 = res['pod'][1]
+            if (('definition' in pod1['@title'].lower()) or ('result' in pod1['@title'].lower()) or (
+                    pod1.get('@primary', 'false') == 'true')):
+                result = resolveListOrDict(pod1['subpod'])
+                speak(" " + result, "Assistant")
+            else:
+                answer = Toplevel()
+                answer.title("display an image")
+                w = 520
+                h = 320
+                x = 80
+                y = 100
+                answer.geometry("%dx%d+%d+%d" % (w, h, x, y))
+                image_url = pod1["subpod"]["img"]["@src"]
+                image_byt = urlopen(image_url).read()
+                image_b64 = base64.encodestring(image_byt)
+                photo = PhotoImage(data=image_b64)
+                cv = Canvas(master=answer, bg='white')
+                cv.pack(side='top', fill='both', expand='yes')
+                cv.create_image(10, 10, image=photo, anchor='nw')
+                answer.mainloop()
 
     elif "search film" in query or "film" in query or "movie" in query:
         speak(" What movie, do you want to search ?", "Assistant")
