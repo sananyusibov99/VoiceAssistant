@@ -135,7 +135,9 @@ phrases = [" Good Morning Sir !", " Good Afternoon Sir !", " Good Evening Sir !"
            " Current volume was set to", " Current volume is", " Sir, the time is", " Sir, the date is",
            " I will stop listening for", " seconds", " Current temperature is:", " degree Celsius",
            " Total number of events for today:", " Brightness was set to", " You first!", " My choice was Rock",
-           " My choice was Paper", " My choice was Scissors", " Draw", " You won", " I won", " Wrong choice"]
+           " My choice was Paper", " My choice was Scissors", " Draw", " You won", " I won", " Wrong choice",
+           " As noun it has these meanings: ", " As verb it has these meanings: ",
+           " As adjective it has these meanings: ", " As adverb it has these meanings: "]
 
 for item in phrases:
     synth(item)

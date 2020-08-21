@@ -41,6 +41,8 @@ import shutil
 import csv
 import inflect
 from io import BytesIO
+from PyDictionary import PyDictionary
+
 webbrowser.register('chrome',
                     None,
                     webbrowser.BackgroundBrowser("C://Program Files (x86)//Google//Chrome//Application//chrome.exe"))
@@ -56,6 +58,7 @@ global assname
 assname = "i don't know my name yet"
 img = []
 film_name = []
+
 
 def addImage():
     # for item in img:
@@ -85,139 +88,139 @@ def addText(msg, side):
     root.update()
 
 
-def speak(msg, side):
-    if type(msg) is str:
-        addText(msg, side)
-        print("Message: " + msg)
-        separatedMsg = msg.replace(':', ' ').replace(';', ' ').split()
-        print(separatedMsg)
-        for word in separatedMsg:
-            p = inflect.engine()
-            try:
-                print(int(word))
-                textValue = p.number_to_words(word)
-                msg = msg.replace(word, textValue)
-            except:
-                pass
-        print(msg)
-        # Считывает все имеющиеся звуки
-        with open('samples/table.csv', mode='r') as infile:
-            reader = csv.reader(infile)
-            mydict = {rows[0]: rows[1] for rows in reader}
-
-        # Если текст уже синтезирован то проигрывает его
-        if mydict.get(msg.lower()):
-            playsound(f"sounds/{mydict.get(msg.lower())}.wav")
-        # Если текст не существует синтезирует его
-        else:
-            # Добавляется в текстовый файл для последущей синтезации
-            f = open("harvard_sentences.txt", "a")
-            f.truncate(0)
-            f.write("http://www.cs.columbia.edu/~hgs/audio/harvard.html\n")
-            msg = msg.lower()
-            f.write(msg)
-            f.close()
-
-            # Вызывается синтез
-            os.system("python synthesize.py")
-
-            # Подсчет сколько файлов уже синтезировано
-            cwd = os.getcwd()
-            cwd = cwd + "\sounds"
-            os.chdir(cwd)
-            print(cwd)
-            count = 0
-            for path in pathlib.Path(".").iterdir():
-                if path.is_file():
-                    count += 1
-            print(count)
-
-            # Перенос нового файла к уже сохраненным файлам
-            cwd = cwd.replace("\sounds", "")
-            original = f'{cwd}\samples\\1.wav'
-            target = f'{cwd}\sounds\\{count + 1}.wav'
-
-            shutil.move(original, target)
-
-            # Проигрывание нового файла
-            playsound(f"{count + 1}.wav")
-
-            # Добавление файла в таблицу для последущего использования
-            os.chdir(cwd)
-            with open('samples/table.csv', 'a+', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([msg, count + 1])
-    else:
-        totalString = ""
-        for item in msg:
-            totalString = totalString + item
-        addText(totalString, side)
-        print("Message: " + totalString)
-        for item in msg:
-            separatedMsg = item.replace(':', ' ').replace(';', ' ').split()
-            print(separatedMsg)
-            for word in separatedMsg:
-                p = inflect.engine()
-                try:
-                    print(int(word))
-                    textValue = p.number_to_words(word)
-                    item = item.replace(word, textValue)
-                except:
-                    pass
-            print(item)
-            # Считывает все имеющиеся звуки
-            with open('samples/table.csv', mode='r') as infile:
-                reader = csv.reader(infile)
-                mydict = {rows[0]: rows[1] for rows in reader}
-
-            # Если текст уже синтезирован то проигрывает его
-            if mydict.get(item.lower()):
-                playsound(f"sounds/{mydict.get(item.lower())}.wav")
-            # Если текст не существует синтезирует его
-            else:
-                # Добавляется в текстовый файл для последущей синтезации
-                f = open("harvard_sentences.txt", "a")
-                f.truncate(0)
-                f.write("http://www.cs.columbia.edu/~hgs/audio/harvard.html\n")
-                item = item.lower()
-                f.write(item)
-                f.close()
-
-                # Вызывается синтез
-                os.system("python synthesize.py")
-
-                # Подсчет сколько файлов уже синтезировано
-                cwd = os.getcwd()
-                cwd = cwd + "\sounds"
-                os.chdir(cwd)
-                print(cwd)
-                count = 0
-                for path in pathlib.Path(".").iterdir():
-                    if path.is_file():
-                        count += 1
-                print(count)
-
-                # Перенос нового файла к уже сохраненным файлам
-                cwd = cwd.replace("\sounds", "")
-                original = f'{cwd}\samples\\1.wav'
-                target = f'{cwd}\sounds\\{count + 1}.wav'
-
-                shutil.move(original, target)
-
-                # Проигрывание нового файла
-                playsound(f"{count + 1}.wav")
-
-                # Добавление файла в таблицу для последущего использования
-                os.chdir(cwd)
-                with open('samples/table.csv', 'a+', newline='') as file:
-                    writer = csv.writer(file)
-                    writer.writerow([item, count + 1])
-
-
 # def speak(msg, side):
-#     addText(msg, side)
-#     engine.say(msg)
-#     engine.runAndWait()
+#     if type(msg) is str:
+#         addText(msg, side)
+#         print("Message: " + msg)
+#         separatedMsg = msg.replace(':', ' ').replace(';', ' ').split()
+#         print(separatedMsg)
+#         for word in separatedMsg:
+#             p = inflect.engine()
+#             try:
+#                 print(int(word))
+#                 textValue = p.number_to_words(word)
+#                 msg = msg.replace(word, textValue)
+#             except:
+#                 pass
+#         print(msg)
+#         # Считывает все имеющиеся звуки
+#         with open('samples/table.csv', mode='r') as infile:
+#             reader = csv.reader(infile)
+#             mydict = {rows[0]: rows[1] for rows in reader}
+#
+#         # Если текст уже синтезирован то проигрывает его
+#         if mydict.get(msg.lower()):
+#             playsound(f"sounds/{mydict.get(msg.lower())}.wav")
+#         # Если текст не существует синтезирует его
+#         else:
+#             # Добавляется в текстовый файл для последущей синтезации
+#             f = open("harvard_sentences.txt", "a")
+#             f.truncate(0)
+#             f.write("http://www.cs.columbia.edu/~hgs/audio/harvard.html\n")
+#             msg = msg.lower()
+#             f.write(msg)
+#             f.close()
+#
+#             # Вызывается синтез
+#             os.system("python synthesize.py")
+#
+#             # Подсчет сколько файлов уже синтезировано
+#             cwd = os.getcwd()
+#             cwd = cwd + "\sounds"
+#             os.chdir(cwd)
+#             print(cwd)
+#             count = 0
+#             for path in pathlib.Path(".").iterdir():
+#                 if path.is_file():
+#                     count += 1
+#             print(count)
+#
+#             # Перенос нового файла к уже сохраненным файлам
+#             cwd = cwd.replace("\sounds", "")
+#             original = f'{cwd}\samples\\1.wav'
+#             target = f'{cwd}\sounds\\{count + 1}.wav'
+#
+#             shutil.move(original, target)
+#
+#             # Проигрывание нового файла
+#             playsound(f"{count + 1}.wav")
+#
+#             # Добавление файла в таблицу для последущего использования
+#             os.chdir(cwd)
+#             with open('samples/table.csv', 'a+', newline='') as file:
+#                 writer = csv.writer(file)
+#                 writer.writerow([msg, count + 1])
+#     else:
+#         totalString = ""
+#         for item in msg:
+#             totalString = totalString + item
+#         addText(totalString, side)
+#         print("Message: " + totalString)
+#         for item in msg:
+#             separatedMsg = item.replace(':', ' ').replace(';', ' ').split()
+#             print(separatedMsg)
+#             for word in separatedMsg:
+#                 p = inflect.engine()
+#                 try:
+#                     print(int(word))
+#                     textValue = p.number_to_words(word)
+#                     item = item.replace(word, textValue)
+#                 except:
+#                     pass
+#             print(item)
+#             # Считывает все имеющиеся звуки
+#             with open('samples/table.csv', mode='r') as infile:
+#                 reader = csv.reader(infile)
+#                 mydict = {rows[0]: rows[1] for rows in reader}
+#
+#             # Если текст уже синтезирован то проигрывает его
+#             if mydict.get(item.lower()):
+#                 playsound(f"sounds/{mydict.get(item.lower())}.wav")
+#             # Если текст не существует синтезирует его
+#             else:
+#                 # Добавляется в текстовый файл для последущей синтезации
+#                 f = open("harvard_sentences.txt", "a")
+#                 f.truncate(0)
+#                 f.write("http://www.cs.columbia.edu/~hgs/audio/harvard.html\n")
+#                 item = item.lower()
+#                 f.write(item)
+#                 f.close()
+#
+#                 # Вызывается синтез
+#                 os.system("python synthesize.py")
+#
+#                 # Подсчет сколько файлов уже синтезировано
+#                 cwd = os.getcwd()
+#                 cwd = cwd + "\sounds"
+#                 os.chdir(cwd)
+#                 print(cwd)
+#                 count = 0
+#                 for path in pathlib.Path(".").iterdir():
+#                     if path.is_file():
+#                         count += 1
+#                 print(count)
+#
+#                 # Перенос нового файла к уже сохраненным файлам
+#                 cwd = cwd.replace("\sounds", "")
+#                 original = f'{cwd}\samples\\1.wav'
+#                 target = f'{cwd}\sounds\\{count + 1}.wav'
+#
+#                 shutil.move(original, target)
+#
+#                 # Проигрывание нового файла
+#                 playsound(f"{count + 1}.wav")
+#
+#                 # Добавление файла в таблицу для последущего использования
+#                 os.chdir(cwd)
+#                 with open('samples/table.csv', 'a+', newline='') as file:
+#                     writer = csv.writer(file)
+#                     writer.writerow([item, count + 1])
+
+
+def speak(msg, side):
+    addText(msg, side)
+    engine.say(msg)
+    engine.runAndWait()
 
 
 def resolveListOrDict(variable):
@@ -292,7 +295,7 @@ def turn():
     # clear = lambda: os.system('cls')
     # clear()
 
-    query = "spell the word consider"
+    query = "meaning of the word Crane"
     # query = takeCommand().lower()
     addText(query, "User")
 
@@ -320,6 +323,20 @@ def turn():
         url = "stackoverflow.com"
         webbrowser.get('chrome').open(url)
 
+    elif "definition" in query or "meaning" in query:
+        query = query.replace("meaning", "").replace("definition", "").replace("of", "").replace("the", "").replace(
+            "word", "")
+        query = query.replace(" ", "")
+        dictionary = PyDictionary()
+        test = dictionary.meaning(query)
+        for key, value in test.items():
+            speak(f" As {key.lower()} it has these meanings: ", "Assistant")
+            countItems = 0
+            for item in value:
+                countItems += 1
+                item = item.replace("(", "").replace(")", "")
+                speak(f" {countItems}) {item}", "Assistant")
+
     # System
     elif "set brightness to" in query:
         c = wmi.WMI(namespace='wmi')
@@ -331,7 +348,7 @@ def turn():
                 methods = c.WmiMonitorBrightnessMethods()[0]
                 methods.WmiSetBrightness(word, 0)
                 speak([" Brightness was set to", f" {word}", " percent"], "Assistant")
-                #speak(f" Brightness was set to {word} percent", "Assistant")
+                # speak(f" Brightness was set to {word} percent", "Assistant")
             except Exception as e:
                 pass
 
@@ -343,7 +360,7 @@ def turn():
             methods = c.WmiMonitorBrightnessMethods()[0]
             methods.WmiSetBrightness(brightness, 0)
             speak([" Brightness was increased, current brightness is", f" {brightness}"], "Assistant")
-            #speak(f" Brightness was increased, current brightness is {brightness}", "Assistant")
+            # speak(f" Brightness was increased, current brightness is {brightness}", "Assistant")
         else:
             speak(" Brightness is maximum", "Assistant")
 
@@ -355,7 +372,7 @@ def turn():
             methods = c.WmiMonitorBrightnessMethods()[0]
             methods.WmiSetBrightness(brightness, 0)
             speak([" Brightness was decreased, current brightness is", f" {brightness}"], "Assistant")
-            #speak(f" Brightness was decreased, current brightness is {brightness}", "Assistant")
+            # speak(f" Brightness was decreased, current brightness is {brightness}", "Assistant")
         else:
             speak(" Brightness is minimum", "Assistant")
 
@@ -388,7 +405,7 @@ def turn():
                 needDb = 25.05889 + (-65.31229 - 25.05889) / (1 + math.pow((needWin / 24.37377), (0.6767844)))
                 volume.SetMasterVolumeLevel(needDb, None)
                 speak([" Current volume was set to", f" {needWin}"], "Assistant")
-                #speak(f" Current volume was set to {needWin}", "Assistant")
+                # speak(f" Current volume was set to {needWin}", "Assistant")
             except Exception as e:
                 pass
 
@@ -404,7 +421,7 @@ def turn():
         volume.SetMasterVolumeLevel(needDb, None)
         needWin = math.trunc(needWin)
         speak([" Current volume is", f" {needWin}"], "Assistant")
-        #speak(f" Current volume is {needWin}", "Assistant")
+        # speak(f" Current volume is {needWin}", "Assistant")
 
     elif "decrease volume" in query:
         devices = AudioUtilities.GetSpeakers()
@@ -418,19 +435,19 @@ def turn():
         volume.SetMasterVolumeLevel(needDb, None)
         needWin = math.trunc(needWin)
         speak([" Current volume is", f" {needWin}"], "Assistant")
-        #speak(f" Current volume is {needWin}", "Assistant")
+        # speak(f" Current volume is {needWin}", "Assistant")
 
     elif 'the time' in query or 'time' in query:
         now = datetime.datetime.now()
         strTime = now.strftime("%H:%M")
         speak([" Sir, the time is", f" {strTime}"], "Assistant")
-        #speak(f" Sir, the time is {strTime}", "Assistant")
+        # speak(f" Sir, the time is {strTime}", "Assistant")
 
     elif 'date is it' in query or 'date' in query:
         now = datetime.datetime.now()
         strTime = now.strftime("%d %B, %Y")
         speak([" Sir, the date is", f" {strTime}"], "Assistant")
-        #speak(f" Sir, the date is {strTime}", "Assistant")
+        # speak(f" Sir, the date is {strTime}", "Assistant")
 
     # хорошая идея с открытием сторонних приложений
     # elif 'open opera' in query:
@@ -546,7 +563,7 @@ def turn():
                 except:
                     pass
         speak([" I will stop listening for", f" {number}", " seconds"], "Assistant")
-        #speak(f" I will stop listening for {number} seconds", "Assistant")
+        # speak(f" I will stop listening for {number} seconds", "Assistant")
         time.sleep(number)
 
     elif "show on map" in query or "where is" in query:
@@ -617,7 +634,7 @@ def turn():
                 current_pressure) + "\n humidity (in percentage) = " + str(
                 current_humidiy) + "\n description = " + str(weather_description))
             speak([" Current temperature is:", f" {current_temperature}", " degree Celsius"], "Assistant")
-            #speak(f" Current temperature is: {current_temperature} degree Celsius", "Assistant")
+            # speak(f" Current temperature is: {current_temperature} degree Celsius", "Assistant")
 
         else:
             speak(" City Not Found ", "Assistant")
@@ -717,7 +734,7 @@ def turn():
             speak(" No upcoming events for today found.", "Assistant")
         else:
             speak([" Total number of events for today:", f" {numberOfTodayEvents}"], "Assistant")
-            #speak(f" Total number of events for today: {numberOfTodayEvents}", "Assistant")
+            # speak(f" Total number of events for today: {numberOfTodayEvents}", "Assistant")
 
     # most asked question from google Assistant
     elif "good morning" in query:
@@ -871,6 +888,7 @@ def turn():
 
         except Exception as e:
             print(str(e))
+
 
 # speak_image = PhotoImage(file="img/mic.png")
 # button_speak = Button(command=turn, image=speak_image).pack()
