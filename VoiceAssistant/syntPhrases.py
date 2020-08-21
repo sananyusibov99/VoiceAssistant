@@ -74,7 +74,7 @@ def synth(msg):
         f.close()
 
         # Вызывается синтез
-        os.system("python synthesize.py")
+        os.system("synthesize.py")
 
         # Подсчет сколько файлов уже синтезировано
         cwd = os.getcwd()
