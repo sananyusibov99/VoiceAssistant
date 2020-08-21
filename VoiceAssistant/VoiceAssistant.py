@@ -31,7 +31,7 @@ import win32com.client as wincl
 from urllib.request import urlopen
 import base64
 import io
-from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage, END
+from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage, END, YES
 from PIL import Image, ImageTk
 from cal_setup import get_calendar_service
 import pathlib
@@ -295,7 +295,7 @@ def turn():
     # clear = lambda: os.system('cls')
     # clear()
 
-    query = "meaning of the word Crane"
+    query = "what is antonym of word fast"
     # query = takeCommand().lower()
     addText(query, "User")
 
@@ -324,18 +324,49 @@ def turn():
         webbrowser.get('chrome').open(url)
 
     elif "definition" in query or "meaning" in query:
+        query = query.replace("what", "").replace(" is ", "")
         query = query.replace("meaning", "").replace("definition", "").replace("of", "").replace("the", "").replace(
             "word", "")
         query = query.replace(" ", "")
         dictionary = PyDictionary()
-        test = dictionary.meaning(query)
-        for key, value in test.items():
+        definitionList = dictionary.meaning(query)
+        for key, value in definitionList.items():
             speak(f" As {key.lower()} it has these meanings: ", "Assistant")
             countItems = 0
             for item in value:
                 countItems += 1
                 item = item.replace("(", "").replace(")", "")
                 speak(f" {countItems}) {item}", "Assistant")
+
+    elif "synonym" in query:
+        query = query.replace("what", "").replace(" is ", "").replace("synonym", "")
+        query = query.replace("of", "").replace("the", "").replace("word", "").replace(" ", "")
+        dictionary = PyDictionary()
+        synonymsList = dictionary.synonym(query)
+        answer = ""
+        number = 0
+        for item in synonymsList:
+            answer = answer + item + ", "
+            number += 1
+            if number == 5:
+                break
+        answer = answer[:-2]
+        speak(answer, "Assistant")
+
+    elif "antonym" in query:
+        query = query.replace("what", "").replace(" is ", "").replace("antonym", "")
+        query = query.replace("of", "").replace("the", "").replace("word", "").replace(" ", "")
+        dictionary = PyDictionary()
+        antonymsList = dictionary.antonym(query)
+        answer = ""
+        number = 0
+        for item in antonymsList:
+            answer = answer + item + ", "
+            number += 1
+            if number == 5:
+                break
+        answer = answer[:-2]
+        speak(answer, "Assistant")
 
     # System
     elif "set brightness to" in query:
@@ -895,12 +926,12 @@ def turn():
 
 button_speak = Button(command=turn, text="Speak").pack()
 
-logText = Text(height=50, width=50)
+logText = Text()
 logText.bind("<Key>", lambda e: "break")
 logText.configure(font=20)
 logText.tag_configure("user", justify="right", foreground="red")
 logText.tag_configure("comp", justify="left", foreground="green")
-logText.pack()
+logText.pack(expand=True, fill=BOTH)
 
 # wishMe()
 # usrname()
