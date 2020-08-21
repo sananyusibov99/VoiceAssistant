@@ -680,6 +680,37 @@ def turn():
         else:
             speak(" Tails", "Assistant")
 
+    elif "rock paper scissors" in query:
+        speak(" You first!", "Assistant")
+        user_choice = takeCommand()
+        bot_choice = random.choice(["R", "P", "S"])
+        if bot_choice == "R":
+            speak(" My choice was Rock", "Assistant")
+        elif bot_choice == "P":
+            speak(" My choice was Paper", "Assistant")
+        elif bot_choice == "S":
+            speak(" My choice was Scissors", "Assistant")
+
+        if user_choice == bot_choice:
+            speak(" Draw", "Assistant")
+        elif user_choice == "R":
+            if bot_choice == "S":
+                speak(" You won", "Assistant")
+            else:
+                speak(" I won", "Assistant")
+        elif user_choice == "S":
+            if bot_choice == "P":
+                speak(" You won", "Assistant")
+            else:
+                speak(" I won", "Assistant")
+        elif user_choice == "P":
+            if bot_choice == "R":
+                speak(" You won", "Assistant")
+            else:
+                speak(" I won", "Assistant")
+        else:
+            speak(" Wrong choice", "Assistant")
+
     elif "pick a number" in query:
         numbersRange = []
         words = query.split()

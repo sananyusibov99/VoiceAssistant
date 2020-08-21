@@ -62,7 +62,8 @@ def synth(msg):
 
     # Если текст уже синтезирован то проигрывает его
     if mydict.get(msg.lower()):
-        playsound(f"sounds/{mydict.get(msg.lower())}.wav")
+        pass
+        #playsound(f"sounds/{mydict.get(msg.lower())}.wav")
     # Если текст не существует синтезирует его
     else:
         # Добавляется в текстовый файл для последущей синтезации
@@ -74,7 +75,7 @@ def synth(msg):
         f.close()
 
         # Вызывается синтез
-        os.system("synthesize.py")
+        os.system("python synthesize.py")
 
         # Подсчет сколько файлов уже синтезировано
         cwd = os.getcwd()
@@ -95,7 +96,7 @@ def synth(msg):
         shutil.move(original, target)
 
         # Проигрывание нового файла
-        playsound(f"{count + 1}.wav")
+        #playsound(f"{count + 1}.wav")
 
         # Добавление файла в таблицу для последущего использования
         os.chdir(cwd)
@@ -133,7 +134,8 @@ phrases = [" Good Morning Sir !", " Good Afternoon Sir !", " Good Evening Sir !"
            " Brightness was increased, current brightness is", " Brightness was decreased, current brightness is",
            " Current volume was set to", " Current volume is", " Sir, the time is", " Sir, the date is",
            " I will stop listening for", " seconds", " Current temperature is:", " degree Celsius",
-           " Total number of events for today:", " Brightness was set to"]
+           " Total number of events for today:", " Brightness was set to", " You first!", " My choice was Rock",
+           " My choice was Paper", " My choice was Scissors", " Draw", " You won", " I won", " Wrong choice"]
 
 for item in phrases:
     synth(item)
