@@ -3,35 +3,25 @@ import wolframalpha
 import pyttsx3
 import json
 import random
-import operator
 import speech_recognition as sr
 import datetime
 import wikipedia
 import webbrowser
-import os
 import re
 import winshell
 import pyjokes
-import feedparser
 import smtplib
 import ctypes
 import time
 import requests
-import shutil
 import wmi
-from playsound import playsound
 from ctypes import POINTER, cast
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import math
-from twilio.rest import Client
-from clint.textui import progress
-from bs4 import BeautifulSoup
-import win32com.client as wincl
 from urllib.request import urlopen
 import base64
-import io
-from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage, END, YES
+from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage, END, Scrollbar
 from PIL import Image, ImageTk
 from cal_setup import get_calendar_service
 import pathlib
@@ -54,17 +44,12 @@ engine.setProperty('voice', voices[1].id)
 root = Tk()
 root.title("Voice Assistant")
 root.minsize(500, 500)
-global assname
 assname = "i don't know my name yet"
 img = []
 film_name = []
 
 
 def addImage():
-    # for item in img:
-    #     logText.image_create(END, image=item)
-    #     logText.insert(END, '\n')
-    #
     for i in range(len(img)):
         logText.image_create(END, image=img[i])
         speak(film_name[i], "Assistant")
@@ -295,7 +280,7 @@ def turn():
     # clear = lambda: os.system('cls')
     # clear()
 
-    query = "what is antonym of word fast"
+    query = "what is the weather in los angeles"
     # query = takeCommand().lower()
     addText(query, "User")
 
@@ -346,12 +331,13 @@ def turn():
         answer = ""
         number = 0
         for item in synonymsList:
-            answer = answer + item + ", "
-            number += 1
-            if number == 5:
-                break
-        answer = answer[:-2]
-        speak(answer, "Assistant")
+            speak(item, "Assistant")
+        #     answer = answer + item + ", "
+        #     number += 1
+        #     if number == 5:
+        #         break
+        # answer = answer[:-2]
+        # speak(answer, "Assistant")
 
     elif "antonym" in query:
         query = query.replace("what", "").replace(" is ", "").replace("antonym", "")
@@ -378,8 +364,8 @@ def turn():
                 word = int(word)
                 methods = c.WmiMonitorBrightnessMethods()[0]
                 methods.WmiSetBrightness(word, 0)
-                speak([" Brightness was set to", f" {word}", " percent"], "Assistant")
-                # speak(f" Brightness was set to {word} percent", "Assistant")
+                # speak([" Brightness was set to", f" {word}", " percent"], "Assistant")
+                speak(f" Brightness was set to {word} percent", "Assistant")
             except Exception as e:
                 pass
 
@@ -390,8 +376,8 @@ def turn():
         if brightness < 100:
             methods = c.WmiMonitorBrightnessMethods()[0]
             methods.WmiSetBrightness(brightness, 0)
-            speak([" Brightness was increased, current brightness is", f" {brightness}"], "Assistant")
-            # speak(f" Brightness was increased, current brightness is {brightness}", "Assistant")
+            # speak([" Brightness was increased, current brightness is", f" {brightness}"], "Assistant")
+            speak(f" Brightness was increased, current brightness is {brightness}", "Assistant")
         else:
             speak(" Brightness is maximum", "Assistant")
 
@@ -402,8 +388,8 @@ def turn():
         if brightness > 5:
             methods = c.WmiMonitorBrightnessMethods()[0]
             methods.WmiSetBrightness(brightness, 0)
-            speak([" Brightness was decreased, current brightness is", f" {brightness}"], "Assistant")
-            # speak(f" Brightness was decreased, current brightness is {brightness}", "Assistant")
+            # speak([" Brightness was decreased, current brightness is", f" {brightness}"], "Assistant")
+            speak(f" Brightness was decreased, current brightness is {brightness}", "Assistant")
         else:
             speak(" Brightness is minimum", "Assistant")
 
@@ -435,8 +421,8 @@ def turn():
                 needWin = int(word)
                 needDb = 25.05889 + (-65.31229 - 25.05889) / (1 + math.pow((needWin / 24.37377), (0.6767844)))
                 volume.SetMasterVolumeLevel(needDb, None)
-                speak([" Current volume was set to", f" {needWin}"], "Assistant")
-                # speak(f" Current volume was set to {needWin}", "Assistant")
+                # speak([" Current volume was set to", f" {needWin}"], "Assistant")
+                speak(f" Current volume was set to {needWin}", "Assistant")
             except Exception as e:
                 pass
 
@@ -451,8 +437,8 @@ def turn():
         needDb = 25.05889 + (-65.31229 - 25.05889) / (1 + math.pow((needWin / 24.37377), (0.6767844)))
         volume.SetMasterVolumeLevel(needDb, None)
         needWin = math.trunc(needWin)
-        speak([" Current volume is", f" {needWin}"], "Assistant")
-        # speak(f" Current volume is {needWin}", "Assistant")
+        # speak([" Current volume is", f" {needWin}"], "Assistant")
+        speak(f" Current volume is {needWin}", "Assistant")
 
     elif "decrease volume" in query:
         devices = AudioUtilities.GetSpeakers()
@@ -465,20 +451,20 @@ def turn():
         needDb = 25.05889 + (-65.31229 - 25.05889) / (1 + math.pow((needWin / 24.37377), (0.6767844)))
         volume.SetMasterVolumeLevel(needDb, None)
         needWin = math.trunc(needWin)
-        speak([" Current volume is", f" {needWin}"], "Assistant")
-        # speak(f" Current volume is {needWin}", "Assistant")
+        # speak([" Current volume is", f" {needWin}"], "Assistant")
+        speak(f" Current volume is {needWin}", "Assistant")
 
     elif 'the time' in query or 'time' in query:
         now = datetime.datetime.now()
         strTime = now.strftime("%H:%M")
-        speak([" Sir, the time is", f" {strTime}"], "Assistant")
-        # speak(f" Sir, the time is {strTime}", "Assistant")
+        # speak([" Sir, the time is", f" {strTime}"], "Assistant")
+        speak(f" Sir, the time is {strTime}", "Assistant")
 
     elif 'date is it' in query or 'date' in query:
         now = datetime.datetime.now()
         strTime = now.strftime("%d %B, %Y")
-        speak([" Sir, the date is", f" {strTime}"], "Assistant")
-        # speak(f" Sir, the date is {strTime}", "Assistant")
+        # speak([" Sir, the date is", f" {strTime}"], "Assistant")
+        speak(f" Sir, the date is {strTime}", "Assistant")
 
     # хорошая идея с открытием сторонних приложений
     # elif 'open opera' in query:
@@ -593,8 +579,8 @@ def turn():
                     number = number * 86400
                 except:
                     pass
-        speak([" I will stop listening for", f" {number}", " seconds"], "Assistant")
-        # speak(f" I will stop listening for {number} seconds", "Assistant")
+        # speak([" I will stop listening for", f" {number}", " seconds"], "Assistant")
+        speak(f" I will stop listening for {number} seconds", "Assistant")
         time.sleep(number)
 
     elif "show on map" in query or "where is" in query:
@@ -602,6 +588,7 @@ def turn():
         query = query.replace("where is", "")
 
         location = query
+        location = location[1:]
         speak(" User asked to Locate", "Assistant")
         speak(" " + location, "Assistant")
         webbrowser.get('chrome').open("https://www.google.nl/maps/place/" + location + "")
@@ -645,30 +632,30 @@ def turn():
         # to get API of Open weather
         api_key = "44e4a0d8152c6a9538668064c5c591dc"
         base_url = "http://api.openweathermap.org/data/2.5/weather?"
-        speak(" City name ", "Assistant")
-        print("City name : ")
-        city_name = takeCommand()
-        complete_url = base_url + "appid=" + api_key + "&q=" + city_name + "&units=metric"
-        print(complete_url)
-        response = requests.get(complete_url)
-        x = response.json()
+        city_name = query.split()
+        # speak(" City name ", "Assistant")
+        # print("City name : ")
+        # city_name = takeCommand()
+        for item in city_name:
+            print(item)
+            complete_url = base_url + "appid=" + api_key + "&q=" + item + "&units=metric"
+            print(complete_url)
+            response = requests.get(complete_url)
+            x = response.json()
 
-        if x["cod"] != "404":
-            y = x["main"]
-            current_temperature = y["temp"]
-            current_pressure = y["pressure"]
-            current_humidiy = y["humidity"]
-            z = x["weather"]
-            weather_description = z[0]["description"]
-            print(" Temperature (in Celsius unit) = " + str(
-                current_temperature) + "\n atmospheric pressure (in hPa unit) =" + str(
-                current_pressure) + "\n humidity (in percentage) = " + str(
-                current_humidiy) + "\n description = " + str(weather_description))
-            speak([" Current temperature is:", f" {current_temperature}", " degree Celsius"], "Assistant")
-            # speak(f" Current temperature is: {current_temperature} degree Celsius", "Assistant")
-
-        else:
-            speak(" City Not Found ", "Assistant")
+            if x["cod"] != "404":
+                y = x["main"]
+                current_temperature = y["temp"]
+                current_pressure = y["pressure"]
+                current_humidiy = y["humidity"]
+                z = x["weather"]
+                weather_description = z[0]["description"]
+                print(" Temperature (in Celsius unit) = " + str(
+                    current_temperature) + "\n atmospheric pressure (in hPa unit) =" + str(
+                    current_pressure) + "\n humidity (in percentage) = " + str(
+                    current_humidiy) + "\n description = " + str(weather_description))
+                # speak([" Current temperature is:", f" {current_temperature}", " degree Celsius"], "Assistant")
+                speak(f" Current temperature is: {current_temperature} degree Celsius", "Assistant")
 
     elif "wikipedia" in query:
         url = "wikipedia.com"
@@ -764,8 +751,8 @@ def turn():
         if numberOfTodayEvents == 0:
             speak(" No upcoming events for today found.", "Assistant")
         else:
-            speak([" Total number of events for today:", f" {numberOfTodayEvents}"], "Assistant")
-            # speak(f" Total number of events for today: {numberOfTodayEvents}", "Assistant")
+            # speak([" Total number of events for today:", f" {numberOfTodayEvents}"], "Assistant")
+            speak(f" Total number of events for today: {numberOfTodayEvents}", "Assistant")
 
     # most asked question from google Assistant
     elif "good morning" in query:
@@ -925,6 +912,8 @@ def turn():
 # button_speak = Button(command=turn, image=speak_image).pack()
 
 button_speak = Button(command=turn, text="Speak").pack()
+
+
 
 logText = Text()
 logText.bind("<Key>", lambda e: "break")
