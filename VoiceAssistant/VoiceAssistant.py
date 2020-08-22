@@ -21,7 +21,7 @@ from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 import math
 from urllib.request import urlopen
 import base64
-from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage, END, Scrollbar
+from tkinter import Tk, Button, Canvas, Label, Toplevel, BOTH, Text, PhotoImage, END, LEFT, RIGHT, Entry, X
 from PIL import Image, ImageTk
 from cal_setup import get_calendar_service
 import pathlib
@@ -274,14 +274,15 @@ def sendEmail(to, content):
     server.close()
 
 
-def turn():
+def turn(parameter, commandText):
     global uname
     global assname
     # clear = lambda: os.system('cls')
     # clear()
-
-    query = "what is the weather in los angeles"
-    # query = takeCommand().lower()
+    if parameter == 0:
+        query = takeCommand().lower()
+    else:
+        query = commandText
     addText(query, "User")
 
     if 'wikipedia' in query:
@@ -911,7 +912,7 @@ def turn():
 # speak_image = PhotoImage(file="img/mic.png")
 # button_speak = Button(command=turn, image=speak_image).pack()
 
-button_speak = Button(command=turn, text="Speak").pack()
+button_speak = Button(command=lambda: turn(0, ""), text="Speak").pack()
 
 
 
@@ -926,5 +927,11 @@ logText.pack(expand=True, fill=BOTH)
 # usrname()
 # speak("How can i Help you, Sir", "Assistant")
 
+enterText = Entry()
+enterText.pack(side=LEFT, fill=BOTH, expand=True)
+print(enterText.get())
+print(type(enterText.get()))
+buttonSubmit = Button(text="Submit", width=30, height=2, command=lambda: turn(1, enterText.get()))
+buttonSubmit.pack(side=RIGHT)
 
 root.mainloop()
