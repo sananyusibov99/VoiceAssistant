@@ -1,13 +1,23 @@
-pip install wolframalpha
-pip install pyttsx3
-pip install SpeechRecognition
-pip install wikipedia
-pip install winshell
-pip install pyjokes
-pip install requests
-pip install twilio
-pip install feedparser
-pip install clint
-pip install PyAudio
-pip install wmi
-pip install pycaw
+wolframalpha
+pyttsx3
+SpeechRecognition
+wikipedia
+winshell
+pyjokes
+requests
+twilio
+feedparser
+clint
+PyAudio
+wmi
+pycaw
+tensorflow==1.11.0
+Pillow
+google-api-python-client
+google-auth-oauthlib
+playsound
+asyncio
+PyDictionary
+tqdm
+librosa
+matplotlib
