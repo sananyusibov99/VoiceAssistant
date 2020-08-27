@@ -32,7 +32,8 @@ import csv
 import inflect
 from io import BytesIO
 from PyDictionary import PyDictionary
-
+import asyncio
+import threading
 webbrowser.register('chrome',
                     None,
                     webbrowser.BackgroundBrowser("C://Program Files (x86)//Google//Chrome//Application//chrome.exe"))
@@ -912,7 +913,8 @@ def turn(parameter, commandText):
 # speak_image = PhotoImage(file="img/mic.png")
 # button_speak = Button(command=turn, image=speak_image).pack()
 
-button_speak = Button(command=lambda: turn(0, ""), text="Speak").pack()
+
+button_speak = Button(command=lambda: threading.Thread(target=turn, args=(0, "")).start(), text="Speak").pack()
 
 
 
@@ -931,7 +933,7 @@ enterText = Entry()
 enterText.pack(side=LEFT, fill=BOTH, expand=True)
 print(enterText.get())
 print(type(enterText.get()))
-buttonSubmit = Button(text="Submit", width=30, height=2, command=lambda: turn(1, enterText.get()))
+buttonSubmit = Button(text="Submit", width=30, height=2, command=lambda: threading.Thread(target=turn, args=(1, enterText.get())).start())
 buttonSubmit.pack(side=RIGHT)
 
 root.mainloop()
