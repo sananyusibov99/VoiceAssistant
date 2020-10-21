@@ -21,3 +21,4 @@ PyDictionary
 tqdm
 librosa
 matplotlib
+PyQt5==5.9.2

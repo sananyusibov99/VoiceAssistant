@@ -34,7 +34,6 @@ from io import BytesIO
 from PyDictionary import PyDictionary
 import asyncio
 import threading
-
 import information
 
 webbrowser.register('chrome',
@@ -48,6 +47,7 @@ engine.setProperty('voice', voices[1].id)
 root = Tk()
 root.title("Voice Assistant")
 root.minsize(500, 500)
+
 assname = "i don't know my name yet"
 img = []
 film_name = []
@@ -917,7 +917,7 @@ def turn(parameter, commandText):
 # button_speak = Button(command=turn, image=speak_image).pack()
 
 
-button_speak = Button(command=lambda: threading.Thread(target=turn, args=(0, "")).start(), text="Speak").pack()
+button_speak = Button(font='Commissioner', command=lambda: threading.Thread(target=turn, args=(0, "")).start(), text="Speak").pack()
 
 
 
@@ -936,7 +936,7 @@ enterText = Entry()
 enterText.pack(side=LEFT, fill=BOTH, expand=True)
 print(enterText.get())
 print(type(enterText.get()))
-buttonSubmit = Button(text="Submit", width=30, height=2, command=lambda: threading.Thread(target=turn, args=(1, enterText.get())).start())
+buttonSubmit = Button(font='Commissioner', text="Submit", width=30, height=2, command=lambda: threading.Thread(target=turn, args=(1, enterText.get())).start())
 buttonSubmit.pack(side=RIGHT)
 
 root.mainloop()
